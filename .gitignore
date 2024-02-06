@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# output files
+*.csv
+*.cfg
+*.vtk
+benchmarks/
 # C extensions
 *.so
 
