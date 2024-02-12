@@ -15,4 +15,3 @@ def run_cpp_simulation(config_file):
     except subprocess.CalledProcessError as e:
         print(f"Error running C++ simulation. Return code: {e.returncode}")
         # You can handle the error as needed
-

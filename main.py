@@ -7,10 +7,9 @@ import pandas as pd
 def main():
     subfolder = "benchmarks/lattice_homogeneous/"
     base_config_file = subfolder + "lattice.cfg"
-    parameter_range_abs_blue = [0, 5, 10, 50, 100]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
+    parameter_range_abs_blue = [100]#[0, 5, 10, 50, 100]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
     parameter_range_scatter_white = [0, 0.5, 1, 5, 10]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
-    output_table_name =  "log_data_combined.csv"
-    dataframe_list = []  # List to store DataFrames for each iteration
+    output_table_name =  "log_data_combined_" + str(parameter_range_abs_blue[0]) + ".csv"
 
     for scatter_white_value in parameter_range_scatter_white:
         for absorption_blue_value in parameter_range_abs_blue:
@@ -55,7 +54,7 @@ def main():
                 # Step 8: Save the DataFrame to file after each iteration
                 dataframe.to_csv(subfolder + output_table_name, index=False)
 
-    print("Log Data for all iterations saved in log_data_combined.csv")
+    print("Log Data for all iterations saved in " + str(output_table_name) )
 
 
 
