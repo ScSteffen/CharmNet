@@ -13,7 +13,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Install singularity [https://docs.sylabs.io/guides/3.0/user-guide/installation.html] on your system. 
+Install [singularity](https://docs.sylabs.io/guides/3.0/user-guide/installation.html) on your system. 
 
 Build the kit_rt singularity container on your system (root access required).
 ```
