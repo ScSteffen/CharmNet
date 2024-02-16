@@ -78,4 +78,4 @@ Run the UQ script (with default settings)
 python main_lattice_homogeneous.py
 ```
 
-If you want to change the values of the design paramters, consider the file `main_lattice_homogeneous.py` (beta)
+If you want to change the values of the design parameters, consider the file `main_lattice_homogeneous.py` (beta)
