@@ -37,8 +37,18 @@ By default,  the absorption and scattering values as well as the source magnitud
 | white    | 0        | 1        | 0        |
 
 
-The absorption and scattering coefficient are the design parameters for this UQ study. 
-Quantities of interest are: 
+The absorption and scattering coefficient are the design parameters for this UQ study. Additional design parameters are the the number of grid cells in each coordinate direction for each square of the lattice geometry and the quadrature order of the velocity space discretization. 
+
+Design parameters are in this order: 
+
+- number of grid points per square side
+- quadrature order
+- aborption in blue squares
+- scattering in white squares
+
+For illustration: 10 grid points means that each square has 10x10 cells, i.e. 7x7x10x10 grid cells overall in the mesh.
+
+Quantities of interest are in this order: 
 
 - CUR_OUTFLOW
 - TOTAL_OUTFLOW
@@ -46,8 +56,9 @@ Quantities of interest are:
 - CUR_PARTICLE_ABSORPTION
 - TOTAL_PARTICLE_ABSORPTION
 - MAX_PARTICLE_ABSORPTION
+- WALL_TIME
 
-Thus the KiT-RT model is a map $F:\mathbb{R}^2\mapsto\mathbb{R}^6$. 
+Thus the KiT-RT model is a map $F:\mathbb{R}^4\mapsto\mathbb{R}^7$. 
 
 The KiT-RT solver config is given in `benchmarks/lattice_homogeneous/lattice.cfg` 
 
