@@ -17,9 +17,10 @@ qois = []
 for scatter_white_value in parameter_range_scatter_white:
         for absorption_blue_value in parameter_range_abs_blue:
             for n_cell in parameter_range_n_cell:
-                design_params.append([n_cell, scatter_white_value,absorption_blue_value])
-                res = model([[n_cell, scatter_white_value,absorption_blue_value]])
-                qois.append(res[0])
+                for n_quad in parameter_range_quad_order:
+                    design_params.append([n_cell,n_quad, scatter_white_value,absorption_blue_value])
+                    res = model([[n_cell, n_quad, scatter_white_value,absorption_blue_value]])
+                    qois.append(res[0])
 # run model and print output
 print("design parameter matrix")
 print(design_params)

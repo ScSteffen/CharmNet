@@ -46,7 +46,7 @@ Design parameters are in this order:
 - aborption in blue squares
 - scattering in white squares
 
-For illustration: 10 grid points means that each square has 10x10 cells, i.e. 7x7x10x10 grid cells overall in the mesh.
+For illustration: 10 grid points means that each of the inner squares has (2*10)^2 cells, and each of the 24 outer squares has 10^2 cells.
 
 Quantities of interest are in this order: 
 

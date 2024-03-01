@@ -2,7 +2,7 @@ import umbridge
 import time
 import os
 
-from src.config_utils import generate_log_filename, read_config_file, update_parameter, write_config_file, remove_files, update_lattice
+from src.config_utils import generate_log_filename, read_config_file, update_parameter, write_config_file, remove_files, update_lattice_mesh_file
 from src.scraping_utils import read_csv_file
 from src.simulation_utils  import run_cpp_simulation_containerized
 
@@ -30,7 +30,7 @@ class KiTRTModelLattice(umbridge.Model):
     
         # Step 1: Read the base config file
         kitrt_parameters = read_config_file(base_config_file)
-        lattice_file_new = update_lattice(n_cells, subfolder + 'mesh/' )
+        lattice_file_new = update_lattice_mesh_file(n_cells, subfolder + 'mesh/')
 
         # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
         kitrt_parameters = update_parameter(kitrt_parameters, key='LATTICE_DSGN_ABSORPTION_BLUE', new_value=absorption_blue_value)

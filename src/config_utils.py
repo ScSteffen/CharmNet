@@ -78,7 +78,31 @@ def remove_files(filename):
         os.remove(csv_file_path)
         print(f"Removed {csv_file_path}")
 
-def update_lattice(n_cell, filepath):
+def update_quarter_hohlraum_mesh_file(n_cell, filepath):
+    filename_geo = filepath + 'quarter_hohlraum.geo'
+    filename_su2 = filepath + f'quarter_hohlraum_p{n_cell}.su2'
+    filename_con = filepath + f'quarter_hohlraum_p{n_cell}.con'
+
+    if not os.path.exists(filename_su2):
+        with open(filename_geo, 'r') as file:
+            lines = file.readlines()
+
+        with open(filename_geo, 'w') as file:
+            for line in lines:
+                if line.startswith('cl_fine'):
+                    line = f'cl_fine = {n_cell};\n'
+                file.write(line)
+
+        # Remove the .con file
+        if os.path.exists(filename_con):
+            os.remove(filename_con)
+
+        os.system(f'gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}')
+
+    return f'quarter_hohlraum_p{n_cell}.su2'
+
+
+def update_lattice_mesh_file(n_cell, filepath):
     filename_geo = filepath + 'lattice.geo'
     filename_su2 = filepath + f'lattice_n{n_cell}.su2'
     filename_con = filepath + f'lattice_n{n_cell}.con'
@@ -100,3 +124,28 @@ def update_lattice(n_cell, filepath):
         os.system(f'gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}')
 
     return f'lattice_n{n_cell}.su2'
+
+def update_half_lattice_mesh_file(n_cell, filepath):
+    filename_geo = filepath + 'half_lattice_homogeneous.geo'
+    filename_su2 = filepath + f'half_lattice_p{n_cell}.su2'
+    filename_vtk = filepath + f'half_lattice_p{n_cell}.vtk'
+    filename_con = filepath + f'half_lattice_p{n_cell}.con'
+
+    if not os.path.exists(filename_su2):
+        with open(filename_geo, 'r') as file:
+            lines = file.readlines()
+
+        with open(filename_geo, 'w') as file:
+            for line in lines:
+                if line.startswith('cl_fine'):
+                    line = f'cl_fine = {n_cell};\n'
+                file.write(line)
+
+        # Remove the .con file
+        if os.path.exists(filename_con):
+            os.remove(filename_con)
+
+        #os.system(f'gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}')
+        #os.system(f'gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}')
+
+    return f'half_lattice_p{n_cell}.su2'
