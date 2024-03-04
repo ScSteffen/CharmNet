@@ -54,7 +54,7 @@ class KiTRTModelHalfLattice(umbridge.Model):
         # Step 5: Run the C++ simulation
         command = "../../build/KiT-RT " + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.cfg'
         slurm_file = "slurm_" + f'half_lattice_p{n_cells}_q{quad_order}.sh'
-        replace_next_line("slurm_script.txt", command, slurm_file)
+        replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
         #run_cpp_simulation_containerized(generated_cfg_file)
 
         # Step 6: Read the log file

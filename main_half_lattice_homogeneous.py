@@ -14,7 +14,7 @@ parameter_range_scatter_white =[ 1] # [0, 0.5, 1, 5, 10]  # Prescribed range for
 design_params = []
 qois = []
 
-with open("slurm_run_all_half_lattice.sh", "w") as file:
+with open("slurm_scripts/slurm_run_all_half_lattice.sh", "w") as file:
     # Iterate over each value for {1}
     for val_1 in parameter_range_n_cell:
         # Iterate over each value for {2}
@@ -22,7 +22,7 @@ with open("slurm_run_all_half_lattice.sh", "w") as file:
             # Write the formatted string to the file
             file.write(f'sbatch slurm_scripts/half_lattice_p{val_1}_q{val_2}.sh\n')
 
-with open("slurm_run_all_half_lattice.sh", "w") as file:
+with open("slurm_scripts/slurm_run_all_half_lattice.sh", "w") as file:
     for scatter_white_value in parameter_range_scatter_white:
             for absorption_blue_value in parameter_range_abs_blue:
                 for n_cell in parameter_range_n_cell:

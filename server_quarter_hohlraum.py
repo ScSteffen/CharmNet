@@ -49,7 +49,7 @@ class KiTRTModelQuarterHohlraum(umbridge.Model):
         # Step 5: Run the C++ simulation
         command = "../../build/KiT-RT " +  f'quad_hohlraum_p{n_cells}_q{quad_order}.cfg'
         slurm_file = "slurm_" + f'quad_hohlraum_p{n_cells}_q{quad_order}.sh'
-        replace_next_line("slurm_script.txt", command, slurm_file)
+        replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
         #run_cpp_simulation_containerized(generated_cfg_file)
 
         # Step 6: Read the log file
