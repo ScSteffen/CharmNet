@@ -1,7 +1,7 @@
-n_recombine = 40;
-n_prog = 1.05;
+n_recombine = 160;
+n_prog = 1.04;
 cl_fine = 0.1;
-n_recombine = 40;
+n_recombine = 160;
 Point(1) = {-3.5, -3.5, 0, cl_fine};
 Point(2) = {3.5, -3.5, 0, cl_fine};
 Point(3) = {-3.5, 3.5, 0, cl_fine};

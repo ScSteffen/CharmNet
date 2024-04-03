@@ -145,7 +145,7 @@ def update_half_lattice_mesh_file(n_cell, filepath):
         if os.path.exists(filename_con):
             os.remove(filename_con)
 
-        #os.system(f'gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}')
-        #os.system(f'gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}')
+        os.system(f'gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}')
+        os.system(f'gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}')
 
     return f'half_lattice_p{n_cell}.su2'
