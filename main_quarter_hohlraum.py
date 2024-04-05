@@ -8,15 +8,6 @@ model = umbridge.HTTPModel(url, "forward")
 parameter_range_n_cell =[0.02,0.01, 0.005, 0.0025, 0.00125, 0.00075] #[10, 20, 40] # 10 means 10^2 cells per lattice square. Cell size reduces with geometric progression (1.05) towards square boundary
 parameter_range_quad_order =[10, 20, 30, 40, 50]     # GAUSS LEGENDRE quadrature
 
-# Open the file for writing
-with open("slurm_scripts/slurm_run_all.sh", "w") as file:
-    # Iterate over each value for {1}
-    for val_1 in parameter_range_n_cell:
-        # Iterate over each value for {2}
-        for val_2 in parameter_range_quad_order:
-            # Write the formatted string to the file
-            file.write(f'sbatch slurm_scripts/quad_hohlraum_p{val_1}_q{val_2}.sh\n')
-
 
 design_params = []
 qois = []
