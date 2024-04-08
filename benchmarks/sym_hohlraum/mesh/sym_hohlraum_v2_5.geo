@@ -1,5 +1,5 @@
-cl_fine = 0.01;
-cl_finer =cl_fine/5;
+cl_fine = 0.02;
+cl_smaller =cl_fine/5;
 
 // Outer points
 Point(1) = {-0.65, -0.65, 0, cl_fine};
@@ -26,15 +26,15 @@ Point(15) = {0.6, -0.4, 0, cl_fine};
 Point(16) = {0.65, -0.4, 0, cl_fine};
 
 // Green (and blue)
-Point(17) = {-0.2, -0.4, 0, cl_finer};
-Point(18) = {-0.2, 0.4, 0, cl_finer};
-Point(19) = {0.2, 0.4, 0, cl_finer};
-Point(20) = {0.2, -0.4, 0, cl_finer};
+Point(17) = {-0.2, -0.4, 0, cl_smaller};
+Point(18) = {-0.2, 0.4, 0, cl_smaller};
+Point(19) = {0.2, 0.4, 0, cl_smaller};
+Point(20) = {0.2, -0.4, 0, cl_smaller};
 
-Point(21) = {-0.15, -0.35, 0, cl_finer};
-Point(22) = {-0.15, 0.35, 0, cl_finer};
-Point(23) = {0.15, 0.35, 0, cl_finer};
-Point(24) = {0.15, -0.35, 0, cl_finer};
+Point(21) = {-0.15, -0.35, 0, cl_smaller};
+Point(22) = {-0.15, 0.35, 0, cl_smaller};
+Point(23) = {0.15, 0.35, 0, cl_smaller};
+Point(24) = {0.15, -0.35, 0, cl_smaller};
 
 
 // Helper points and lines
@@ -49,11 +49,11 @@ Point(39) = {0.6, 0.65, 0, cl_fine};
 Point(40) = {0.6, -0.65, 0, cl_fine};
 
 
-Point(56) = { cl_fine, -0.6 , 0, cl_finer*2};
-Point(41) = { - cl_fine, -0.6, 0, cl_finer*2};
+Point(56) = { cl_fine, -0.6 , 0, cl_fine};
+Point(41) = { - cl_fine, -0.6, 0,cl_fine};
 
-Point(44) = { cl_fine, 0.6 , 0, cl_finer*2};
-Point(45) =  { - cl_fine, 0.6 , 0, cl_finer*2};
+Point(44) = { cl_fine, 0.6 , 0, cl_fine};
+Point(45) =  { - cl_fine, 0.6 , 0, cl_fine};
 
 
 
