@@ -1,11 +1,12 @@
 n_recombine = 160;
-n_prog = 1.04;
-cl_fine = 0.1;
-n_recombine = 160;
-Point(1) = {-3.5, -3.5, 0, cl_fine};
-Point(2) = {3.5, -3.5, 0, cl_fine};
-Point(3) = {-3.5, 3.5, 0, cl_fine};
-Point(4) = {3.5, 3.5, 0, cl_fine};
+n_prog = 1.03;
+cl_fine = 4/n_recombine;
+cl_coarse = cl_fine;
+
+Point(1) = {-3.5, -3.5, 0, cl_coarse};
+Point(2) = {3.5, -3.5, 0, cl_coarse};
+Point(3) = {-3.5, 3.5, 0, cl_coarse};
+Point(4) = {3.5, 3.5, 0, cl_coarse};
 
 // Inner grid
 Point(5) = { -2.5, -2.5, 0, cl_fine };
@@ -131,50 +132,50 @@ Point(124) = { 2.5, 2.0, 0, cl_fine };
 Point(125) = { 2.5, 2.5, 0, cl_fine };
 
 // helper boundary points
-Point(126) = { -2.5, -3.5, 0, cl_fine };
-Point(127) = { -2.0, -3.5, 0, cl_fine };
-Point(128) = { -1.5, -3.5, 0, cl_fine };
-Point(129) = { -1.0, -3.5, 0, cl_fine };
-Point(130) = { -0.5, -3.5, 0, cl_fine };
-Point(131) = { 0.0, -3.5, 0, cl_fine };
-Point(132) = { 0.5, -3.5, 0, cl_fine };
-Point(133) = { 1.0, -3.5, 0, cl_fine };
-Point(134) = { 1.5, -3.5, 0, cl_fine };
-Point(135) = { 2.0, -3.5, 0, cl_fine };
-Point(136) = { 2.5, -3.5, 0, cl_fine };
-Point(137) = { -2.5, 3.5, 0, cl_fine };
-Point(138) = { -2.0, 3.5, 0, cl_fine };
-Point(139) = { -1.5, 3.5, 0, cl_fine };
-Point(140) = { -1.0, 3.5, 0, cl_fine };
-Point(141) = { -0.5, 3.5, 0, cl_fine };
-Point(142) = { 0.0, 3.5, 0, cl_fine };
-Point(143) = { 0.5, 3.5, 0, cl_fine };
-Point(144) = { 1.0, 3.5, 0, cl_fine };
-Point(145) = { 1.5, 3.5, 0, cl_fine };
-Point(146) = { 2.0, 3.5, 0, cl_fine };
-Point(147) = { 2.5, 3.5, 0, cl_fine };
-Point(148) = { -3.5, -2.5, 0, cl_fine };
-Point(149) = { -3.5, -2.0, 0, cl_fine };
-Point(150) = { -3.5, -1.5, 0, cl_fine };
-Point(151) = { -3.5, -1.0, 0, cl_fine };
-Point(152) = { -3.5, -0.5, 0, cl_fine };
-Point(153) = { -3.5, 0.0, 0, cl_fine };
-Point(154) = { -3.5, 0.5, 0, cl_fine };
-Point(155) = { -3.5, 1.0, 0, cl_fine };
-Point(156) = { -3.5, 1.5, 0, cl_fine };
-Point(157) = { -3.5, 2.0, 0, cl_fine };
-Point(158) = { -3.5, 2.5, 0, cl_fine };
-Point(159) = { 3.5, -2.5, 0, cl_fine };
-Point(160) = { 3.5, -2.0, 0, cl_fine };
-Point(161) = { 3.5, -1.5, 0, cl_fine };
-Point(162) = { 3.5, -1.0, 0, cl_fine };
-Point(163) = { 3.5, -0.5, 0, cl_fine };
-Point(164) = { 3.5, 0.0, 0, cl_fine };
-Point(165) = { 3.5, 0.5, 0, cl_fine };
-Point(166) = { 3.5, 1.0, 0, cl_fine };
-Point(167) = { 3.5, 1.5, 0, cl_fine };
-Point(168) = { 3.5, 2.0, 0, cl_fine };
-Point(169) = { 3.5, 2.5, 0, cl_fine };
+Point(126) = { -2.5, -3.5, 0, cl_coarse };
+Point(127) = { -2.0, -3.5, 0, cl_coarse };
+Point(128) = { -1.5, -3.5, 0, cl_coarse };
+Point(129) = { -1.0, -3.5, 0, cl_coarse };
+Point(130) = { -0.5, -3.5, 0, cl_coarse };
+Point(131) = { 0.0, -3.5, 0, cl_coarse };
+Point(132) = { 0.5, -3.5, 0, cl_coarse };
+Point(133) = { 1.0, -3.5, 0, cl_coarse };
+Point(134) = { 1.5, -3.5, 0, cl_coarse };
+Point(135) = { 2.0, -3.5, 0, cl_coarse };
+Point(136) = { 2.5, -3.5, 0, cl_coarse };
+Point(137) = { -2.5, 3.5, 0, cl_coarse };
+Point(138) = { -2.0, 3.5, 0, cl_coarse };
+Point(139) = { -1.5, 3.5, 0, cl_coarse };
+Point(140) = { -1.0, 3.5, 0, cl_coarse };
+Point(141) = { -0.5, 3.5, 0, cl_coarse };
+Point(142) = { 0.0, 3.5, 0, cl_coarse };
+Point(143) = { 0.5, 3.5, 0, cl_coarse };
+Point(144) = { 1.0, 3.5, 0, cl_coarse };
+Point(145) = { 1.5, 3.5, 0, cl_coarse };
+Point(146) = { 2.0, 3.5, 0, cl_coarse };
+Point(147) = { 2.5, 3.5, 0, cl_coarse };
+Point(148) = { -3.5, -2.5, 0, cl_coarse };
+Point(149) = { -3.5, -2.0, 0, cl_coarse };
+Point(150) = { -3.5, -1.5, 0, cl_coarse };
+Point(151) = { -3.5, -1.0, 0, cl_coarse };
+Point(152) = { -3.5, -0.5, 0, cl_coarse };
+Point(153) = { -3.5, 0.0, 0, cl_coarse };
+Point(154) = { -3.5, 0.5, 0, cl_coarse };
+Point(155) = { -3.5, 1.0, 0, cl_coarse };
+Point(156) = { -3.5, 1.5, 0, cl_coarse };
+Point(157) = { -3.5, 2.0, 0, cl_coarse };
+Point(158) = { -3.5, 2.5, 0, cl_coarse };
+Point(159) = { 3.5, -2.5, 0, cl_coarse };
+Point(160) = { 3.5, -2.0, 0, cl_coarse };
+Point(161) = { 3.5, -1.5, 0, cl_coarse };
+Point(162) = { 3.5, -1.0, 0, cl_coarse };
+Point(163) = { 3.5, -0.5, 0, cl_coarse };
+Point(164) = { 3.5, 0.0, 0, cl_coarse };
+Point(165) = { 3.5, 0.5, 0, cl_coarse };
+Point(166) = { 3.5, 1.0, 0, cl_coarse };
+Point(167) = { 3.5, 1.5, 0, cl_coarse };
+Point(168) = { 3.5, 2.0, 0, cl_coarse };
+Point(169) = { 3.5, 2.5, 0, cl_coarse };
 
 // Horizontal and vertical lines in inner grid
 Line(5) = { 5, 16};
@@ -723,14 +724,7 @@ Transfinite Surface {98};
 Transfinite Surface {99};
 Transfinite Surface {100};
 //+
-Transfinite Curve {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103} = n_recombine Using Progression n_prog;
-// add outer perimeter with half as many cells and no Progression
-Transfinite Curve {104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}  = n_recombine / 4 Using Progression 1;
-//+
-Transfinite Curve { 127, 137, 147, 157, 167, 177, 187, 197, 207, 217, 227, 128, 138, 148, 158, 168, 178, 188, 198, 208, 218, 228, 129, 139, 149, 159, 169, 179, 189, 199, 209, 219, 229, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 131, 141, 151, 161, 171, 181, 191, 201, 211, 221, 231, 132, 142, 152, 162, 172, 182, 192, 202, 212, 222, 232, 133, 143, 153, 163, 173, 183, 193, 203, 213, 223, 233, 134, 144, 154, 164, 174, 184, 194, 204, 214, 224, 234} = n_recombine Using Progression n_prog;
-// add outer perimeter with half as many cells and no Progression
-Transfinite Curve {126, 136, 146, 156, 166, 176, 186, 196, 206, 216, 226, 135, 145, 155, 165, 175, 185, 195, 205, 215, 225, 235}  = n_recombine / 4 Using Progression 1;
-//+
+
 Line(236) = {1, 126};
 //+
 Line(237) = {126, 127};
@@ -1180,8 +1174,17 @@ Transfinite Surface {144};
 //+
 Transfinite Surface {145};
 //+
+Transfinite Curve {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103} = n_recombine Using Progression n_prog;
+// add outer perimeter with half as many cells and no Progression
+Transfinite Curve {104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}  = n_recombine / 2 Using Progression 1;
+//+
+Transfinite Curve { 127, 137, 147, 157, 167, 177, 187, 197, 207, 217, 227, 128, 138, 148, 158, 168, 178, 188, 198, 208, 218, 228, 129, 139, 149, 159, 169, 179, 189, 199, 209, 219, 229, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 131, 141, 151, 161, 171, 181, 191, 201, 211, 221, 231, 132, 142, 152, 162, 172, 182, 192, 202, 212, 222, 232, 133, 143, 153, 163, 173, 183, 193, 203, 213, 223, 233, 134, 144, 154, 164, 174, 184, 194, 204, 214, 224, 234} = n_recombine Using Progression n_prog;
+// add outer perimeter with half as many cells and no Progression
+Transfinite Curve {126, 136, 146, 156, 166, 176, 186, 196, 206, 216, 226, 135, 145, 155, 165, 175, 185, 195, 205, 215, 225, 235}  = n_recombine / 2 Using Progression 1;
+//+
+
 Transfinite Curve { 238, 239, 240, 241, 242, 243, 244, 245,   250, 251, 252, 253, 254, 255, 256, 257,  262, 263, 264, 265, 266, 267, 268, 269,   274, 275, 276, 277, 278, 279, 280, 281} = n_recombine Using Progression 1;
-Transfinite Curve {237,246,249, 258,261,270,273,282} = n_recombine / 4 Using Progression 1;
+Transfinite Curve {237,246,249, 258,261,270,273,282} = n_recombine / 2 Using Progression 1;
 
 
 Physical Curve("void",328) = {236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283};
