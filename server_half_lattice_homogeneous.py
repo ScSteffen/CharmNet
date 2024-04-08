@@ -1,6 +1,5 @@
 import umbridge
-import time
-import os
+
 
 from src.config_utils import generate_log_filename, read_config_file, update_parameter, write_config_file, remove_files, update_half_lattice_mesh_file
 from src.scraping_utils import read_csv_file
@@ -19,6 +18,12 @@ class KiTRTModelHalfLattice(umbridge.Model):
         return [1]
 
     def __call__(self, parameters, config):
+        """
+        A function that performs a series of steps including reading a base config file,
+        updating parameters based on input values, running a C++ simulation, and processing
+        the output data. It takes in parameters and a config dictionary, and returns a list
+        of quantities of interest calculated during the simulation.
+        """
         
         n_cells =parameters[0][0]  
         quad_order =parameters[0][1]
@@ -55,22 +60,23 @@ class KiTRTModelHalfLattice(umbridge.Model):
         command = "../../build/KiT-RT " + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.cfg'
         slurm_file = "slurm_" + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.sh'
         replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
-        #run_cpp_simulation_containerized(generated_cfg_file)
+
+        run_cpp_simulation_containerized(generated_cfg_file)
 
         # Step 6: Read the log file
         log_filename = generate_log_filename(kitrt_parameters)
-        #if log_filename:
-        #    # Step 7: Read and convert the data from the CSV log file to a DataFrame
-        #    log_data = read_csv_file(subfolder + log_filename + ".csv")
-        #    log_data['LATTICE_DSGN_ABSORPTION_BLUE'] = absorption_blue_value
-        #    log_data['LATTICE_DSGN_SCATTER_WHITE'] = scatter_white_value
-        quantities_of_interest =[0]# [float(log_data['Cur_outflow']),
-                                      #float(log_data['Total_outflow']),
-                                      #float(log_data['Max_outflow']),
-                                      #float(log_data['Cur_absorption']),
-                                      #float(log_data['Total_absorption']),
-                                      #float(log_data['Max_absorption']),
-                                      #float(log_data['Wall_time_[s]'])]
+        if log_filename:
+            # Step 7: Read and convert the data from the CSV log file to a DataFrame
+            log_data = read_csv_file(subfolder + log_filename + ".csv")
+            log_data['LATTICE_DSGN_ABSORPTION_BLUE'] = absorption_blue_value
+            log_data['LATTICE_DSGN_SCATTER_WHITE'] = scatter_white_value
+        quantities_of_interest = [float(log_data['Cur_outflow']),
+                                      float(log_data['Total_outflow']),
+                                      float(log_data['Max_outflow']),
+                                      float(log_data['Cur_absorption']),
+                                      float(log_data['Total_absorption']),
+                                      float(log_data['Max_absorption']),
+                                      float(log_data['Wall_time_[s]'])]
    
         return [quantities_of_interest]
 
