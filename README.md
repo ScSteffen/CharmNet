@@ -5,6 +5,39 @@ CharmNet contains a series of testcases outlined below.
 
 ## Installation
 
+Preliminaries: 
+
+1. Install [singularity](https://docs.sylabs.io/guides/3.0/user-guide/installation.html) on your system. 
+
+2. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) on your system.
+    a) Download the git repository and checkout the correct branch (since the new test cases are not yet in release)
+    ```
+    cd ..
+    git clone git@github.com:CSMMLab/KiT-RT.git
+    cd KiT-RT
+    git checkout new_radiation_test_cases
+    git pull origin
+    ```
+
+    b) Build  the KiT-RT singularity container on your system (root access required).
+    ```
+    cd tools/singularity
+    sh build_container.sh
+    cd ../..
+    ```
+    If you use a cluster without root access, build the container locally and upload it to the directory `./tools/singularity/` 
+
+    c) Compile KiT-RT within singularity on your system
+    
+    ```
+    mkdir build
+    cmake ../
+    make -j
+    ```
+
+    d) Copy the KiT-RT executable
+export PATH=/home/8v5/projects/KiT-RT/build:$PATH
+
 Install the python requirements in a local virtual environment
 
 ```
@@ -20,6 +53,8 @@ Build the kit_rt singularity container on your system (root access required).
 cd singularity
 sh build_container.sh
 ```
+
+
  If you use a cluster without root access, build the container locally and upload it to the directory `./singularity/` 
 
 ## Homogeneous lattice test case
