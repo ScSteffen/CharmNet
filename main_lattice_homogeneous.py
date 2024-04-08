@@ -6,7 +6,7 @@ model = umbridge.HTTPModel(url, "forward")
 # Assemble parameter matrix
 # design parameter vector is 2d (scatter_white, absorption_blue)
 
-parameter_range_n_cell =[10,20,30,40,50, 60, 80, 160] #[10, 20, 40] # 10 means 10^2 cells per lattice square. Cell size reduces with geometric progression (1.05) towards square boundary
+parameter_range_n_cell =[20,30,40,50, 60, 80, 160] #[10, 20, 40] # 10 means 10^2 cells per lattice square. Cell size reduces with geometric progression (1.05) towards square boundary
 parameter_range_quad_order =[10, 20 , 30 ,40 ,50 ]       # LDFESA quadrature
 parameter_range_abs_blue = [10] #[0, 5, 10, 50, 100]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
 parameter_range_scatter_white =[1] # [0, 0.5, 1, 5, 10]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE

@@ -16,7 +16,7 @@ class KiTRTModelLattice(umbridge.Model):
         return [4]
 
     def get_output_sizes(self, config):
-        return [1]
+        return [7]
 
     def __call__(self, parameters, config):
         
