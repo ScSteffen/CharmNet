@@ -15,7 +15,7 @@ class KiTRTModelHalfLattice(umbridge.Model):
         return [4]
 
     def get_output_sizes(self, config):
-        return [1]
+        return [7]
 
     def __call__(self, parameters, config):
         """
@@ -57,9 +57,9 @@ class KiTRTModelHalfLattice(umbridge.Model):
         write_config_file(parameters=kitrt_parameters, output_file_path=generated_cfg_file)
 
         # Step 5: Run the C++ simulation
-        command = "../../build/KiT-RT " + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.cfg'
-        slurm_file = "slurm_" + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.sh'
-        replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
+        #command = "../../build/KiT-RT " + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.cfg'
+        #slurm_file = "slurm_" + f'half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cells}_q{quad_order}.sh'
+        #replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
 
         run_cpp_simulation_containerized(generated_cfg_file)
 
@@ -70,13 +70,13 @@ class KiTRTModelHalfLattice(umbridge.Model):
             log_data = read_csv_file(subfolder + log_filename + ".csv")
             log_data['LATTICE_DSGN_ABSORPTION_BLUE'] = absorption_blue_value
             log_data['LATTICE_DSGN_SCATTER_WHITE'] = scatter_white_value
-        quantities_of_interest = [float(log_data['Cur_outflow']),
-                                      float(log_data['Total_outflow']),
-                                      float(log_data['Max_outflow']),
-                                      float(log_data['Cur_absorption']),
-                                      float(log_data['Total_absorption']),
-                                      float(log_data['Max_absorption']),
-                                      float(log_data['Wall_time_[s]'])]
+            quantities_of_interest = [float(log_data['Cur_outflow']),
+                                        float(log_data['Total_outflow']),
+                                        float(log_data['Max_outflow']),
+                                        float(log_data['Cur_absorption']),
+                                        float(log_data['Total_absorption']),
+                                        float(log_data['Max_absorption']),
+                                        float(log_data['Wall_time_[s]'])]
    
         return [quantities_of_interest]
 
