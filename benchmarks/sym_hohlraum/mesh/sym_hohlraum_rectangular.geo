@@ -648,9 +648,10 @@ Transfinite Surface {39};
 Transfinite Surface {38};
 //+
 Transfinite Surface {7};
+Transfinite Surface {34};
 
-Physical Curve("void", 87) = {71, 72, 73, 74, 8, 52, 3, 79, 80, 82, 84, 86, 1, 35, 5, 69, 115, 117, 119, 123, 125,128,129, 131,135, 137, 139, 141};
-//+
-Physical Curve("inflow", 88) = {29, 30, 31, 28};
+Physical Curve("void", 142) = {28, 71, 77, 76, 29, 5, 115, 117, 119, 121, 123, 125, 128, 8, 30, 83, 85, 81, 31, 3, 129, 131, 133, 135, 137, 139, 141, 1};
 
 Recombine Surface "*";
+//+
+//+
