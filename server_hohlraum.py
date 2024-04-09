@@ -35,7 +35,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         kitrt_parameters = update_parameter(kitrt_parameters, key='MESH_FILE', new_value= 'mesh/' + hohlraum_file_new)
 
         # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
-        log_file_cur = f'sym_hohlraum_p{n_cells}_q{quad_order}'
+        log_file_cur = f'sym_hohlraum_n{n_cells}_q{quad_order}'
         kitrt_parameters = update_parameter(kitrt_parameters, key='LOG_FILE', new_value=log_file_cur)
         remove_files(subfolder + kitrt_parameters['LOG_DIR'] +"/"+ log_file_cur)
         kitrt_parameters = update_parameter(kitrt_parameters, key='OUTPUT_FILE', new_value=log_file_cur)
@@ -49,16 +49,16 @@ class KiTRTModelHohlraum(umbridge.Model):
         # Step 5: Run the C++ simulation
         command = "../../build/KiT-RT " +  f'sym_hohlraum_p{n_cells}_q{quad_order}.cfg'
         slurm_file = "slurm_" + f'sym_hohlraum_p{n_cells}_q{quad_order}.sh'
-        replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
-        #run_cpp_simulation_containerized(generated_cfg_file)
+        #replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
+        run_cpp_simulation_containerized(generated_cfg_file)
 
         # Step 6: Read the log file
         log_filename = generate_log_filename(kitrt_parameters)
-        #if log_filename:
+        if log_filename:
             # Step 7: Read and convert the data from the CSV log file to a DataFrame
-        #    log_data = read_csv_file(subfolder + log_filename + ".csv")
-        #    quantities_of_interest = [float(log_data['Wall_time_[s]'])]
-        quantities_of_interest = [0]
+            log_data = read_csv_file(subfolder + log_filename + ".csv")
+            quantities_of_interest = [float(log_data['Wall_time_[s]'])]
+        #quantities_of_interest = [0]
         return [quantities_of_interest]
 
     def supports_evaluate(self):

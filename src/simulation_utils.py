@@ -21,7 +21,7 @@ def run_cpp_simulation(config_file):
 
 def run_cpp_simulation_containerized(config_file):
     # Path to the C++ executable
-    singularity_command = [ "singularity", "exec", "singularity/kit_rt.sif", "./KiT-RT/KiT-RT", config_file]
+    singularity_command = [ "singularity", "exec", "KiT-RT/tools/singularity/kit_rt.sif", "./KiT-RT/build_singularity/KiT-RT", config_file]
 
     # Command to run the C++ executable with the provided config file
 
