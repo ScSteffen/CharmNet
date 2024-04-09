@@ -43,12 +43,12 @@ class KiTRTModelHohlraum(umbridge.Model):
 
 
         # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
-        generated_cfg_file = subfolder + f'sym_hohlraum_p{n_cells}_q{quad_order}.cfg'
+        generated_cfg_file = subfolder + f'sym_hohlraum_n{n_cells}_q{quad_order}.cfg'
         write_config_file(parameters=kitrt_parameters, output_file_path=generated_cfg_file)
 
         # Step 5: Run the C++ simulation
-        command = "../../build/KiT-RT " +  f'sym_hohlraum_p{n_cells}_q{quad_order}.cfg'
-        slurm_file = "slurm_" + f'sym_hohlraum_p{n_cells}_q{quad_order}.sh'
+        command = "../../build/KiT-RT " +  f'sym_hohlraum_n{n_cells}_q{quad_order}.cfg'
+        slurm_file = "slurm_" + f'sym_hohlraum_n{n_cells}_q{quad_order}.sh'
         #replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
         run_cpp_simulation_containerized(generated_cfg_file)
 

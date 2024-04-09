@@ -5,7 +5,7 @@ model = umbridge.HTTPModel(url, "forward")
 
 # Assemble parameter matrix
 
-parameter_range_n_cell =[ 0.01,0.005] #[10, 20, 40] # 10 means 10^2 cells per lattice square. Cell size reduces with geometric progression (1.05) towards square boundary
+parameter_range_n_cell =[ 10, 20] #[10, 20, 40] # 10 means 10^2 cells per lattice square. Cell size reduces with geometric progression (1.05) towards square boundary
 parameter_range_quad_order =[10, 20]#, 30, 40, 50]     # GAUSS LEGENDRE quadrature
 
 # Open the file for writing
