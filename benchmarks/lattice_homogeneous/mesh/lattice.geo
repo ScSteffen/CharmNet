@@ -1,5 +1,5 @@
-n_recombine = 160;
-n_prog = 1.03;
+n_recombine = 30;
+n_prog = 1.04;
 cl_fine = 4/n_recombine;
 cl_coarse = cl_fine;
 
