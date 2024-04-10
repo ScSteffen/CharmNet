@@ -1,7 +1,6 @@
-# CharmNet
-CharmNet Benchmarking Suite using the [UM-Bridge UQ suite](https://um-bridge-benchmarks.readthedocs.io/en/docs/) and the [KiT-RT PDE simulator](https://kit-rt.readthedocs.io/en/develop/index.html). 
+# CharmKiT
+CharmKiT is a enchmarking suite for the CharmNet project using the [UM-Bridge UQ suite](https://um-bridge-benchmarks.readthedocs.io/en/docs/) and the [KiT-RT PDE simulator](https://kit-rt.readthedocs.io/en/develop/index.html). 
 
-CharmNet contains a series of testcases outlined below. 
 
 ## Installation
 
@@ -10,7 +9,7 @@ Preliminaries:
 1. Install [singularity](https://docs.sylabs.io/guides/latest/user-guide/quick_start.html) on your system. You can install it anywhere on your computer. 
 
 
-2. Create a local python environment for CharmNet and install the python requirements in a local virtual environment
+2. Create a local python environment for CharmKiT and install the python requirements in a local virtual environment
 
     ```
     python3 -m venv ./venv
@@ -18,10 +17,10 @@ Preliminaries:
     pip install -r requirements.txt
     ```
 
-2. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) as a submodule of CharmNet on your system.
+2. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) as a submodule of CharmKiT on your system.
 
-    Use the installer in the CharmNet folder. Caution: The installer requires root privileges to build the singularity container.
-    If you use a cluster without root access, build the container locally and upload it to the directory `CharmNet/KiT-RT/tools/singularity/` 
+    Use the installer in the CharmKiT folder. Caution: The installer requires root privileges to build the singularity container.
+    If you use a cluster without root access, build the container locally and upload it to the directory `CharmKiT/KiT-RT/tools/singularity/` 
 
     ```
     sh install_KiT-RT.sh
@@ -32,9 +31,9 @@ Preliminaries:
     sh update_KiT-RT.sh
     ```
 
-## How CharmNet works
+## How CharmKiT works
 
-CharmNet uses [UM-Bridge](https://um-bridge-benchmarks.readthedocs.io/en/docs/) as a driver for easy access to the [KiT-RT](https://github.com/CSMMLab/KiT-RT) solver suite. 
+CharmKiT uses [UM-Bridge](https://um-bridge-benchmarks.readthedocs.io/en/docs/) as a driver for easy access to the [KiT-RT](https://github.com/CSMMLab/KiT-RT) solver suite. 
 
 In a nutshell: Each test case, i.e. Lattice, Hohlraum,..., consists of a server script and a client script.
 
@@ -53,7 +52,7 @@ In a nutshell: Each test case, i.e. Lattice, Hohlraum,..., consists of a server 
 
 ## How KiT-RT works
 
-[KiT-RT](https://github.com/CSMMLab/KiT-RT) is a C++ based modular solver for radiation transport. It uses 1st and 2nd order finite volume schemes for space-time discretization and different Moment (PN) and Discrete Ordinates (SN) schemes for angular space. For the purpose of CharmNet, we use the SN solver of KiT-RT. 
+[KiT-RT](https://github.com/CSMMLab/KiT-RT) is a C++ based modular solver for radiation transport. It uses 1st and 2nd order finite volume schemes for space-time discretization and different Moment (PN) and Discrete Ordinates (SN) schemes for angular space. For the purpose of CharmKiT, we use the SN solver of KiT-RT. 
 
 ### How to run test cases (barebone)
 You dont have to run KiT-RT directly, and can use the UM-Bridge wrapper. If you want to, here's how:
@@ -156,7 +155,7 @@ HISTORY_OUTPUT_FREQUENCY = 1
 
 ### What are the outputs of KiT-RT?
 
-In the specified output directories, see config option `LOG_DIR` and `OUTPUT_DIR`,  KiT-RT saves `.csv` log files that contain the quantities of interest for every time-step, and `.vtk` mesh files, that contain the mesh information with the degrees of freedom in each grid cell. For the CharmNet experiments, the scalar flux is the only degree of freedom in the output mesh. 
+In the specified output directories, see config option `LOG_DIR` and `OUTPUT_DIR`,  KiT-RT saves `.csv` log files that contain the quantities of interest for every time-step, and `.vtk` mesh files, that contain the mesh information with the degrees of freedom in each grid cell. For the CharmKiT experiments, the scalar flux is the only degree of freedom in the output mesh. 
 
 The `.vtk` outputs can be postprocessed with [Paraview](https://www.paraview.org/) and the [VTK Python package](https://pypi.org/project/vtk/), both open access frameworks. 
 ### Why singularity containers for KiT-RT?
