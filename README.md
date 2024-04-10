@@ -56,19 +56,25 @@ In a nutshell: Each test case, i.e. Lattice, Hohlraum,..., consists of a server 
 [KiT-RT](https://github.com/CSMMLab/KiT-RT) is a C++ based modular solver for radiation transport. It uses 1st and 2nd order finite volume schemes for space-time discretization and different Moment (PN) and Discrete Ordinates (SN) schemes for angular space. For the purpose of CharmNet, we use the SN solver of KiT-RT. 
 
 ### How to run test cases (barebone)
+You dont have to run KiT-RT directly, and can use the UM-Bridge wrapper. If you want to, here's how:
+
 KiT-RT is configured with a configuration file, e.g. `hohlraum.cfg`, and then executed as
 
 ```
     ./path/to/kitrt/KiT-RT hohlraum.cfg
 ```
+If you execute the `hohlraum.cfg` from the `benchmarks/hohlraum` subfolder, the command reads `../../KiT-RT/build/KiT-RT hohlraum.cfg`. Note that you need a system install of KiT-RT here.
 
 If you want to run KiT-RT with a singularity container (recommended), the command reads
 
 ```
    singularity exec ./path/to/kitrt_singularity_container/kit_rt.sif ./path/to/kitrt_exec_folder/KiT-RT hohlraum.cfg
 ```
+If you execute the `hohlraum.cfg` from the `benchmarks/hohlraum` subfolder, the command becomes `singularity exec ../../KiT-RT/tools/singularity/kit_rt.sif ../../KiT-RT/build_singularity/KiT-RT hohlraum.cfg`. Note that you need a singularity install of KiT-RT here.
 
 Singularity does not require root access to your system and has the same permissions as your user.
+
+### How to specify test-cases with config files.
 
 The config files assemebles the solver modules, solver resolution and test case parameters. A config file may look like the one below. It allows a very fine grained access to the solver, but may be a bit much for starters. Therefore, we encapsulate this configuration process within the UM-Bridge server - client model. 
 
