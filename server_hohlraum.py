@@ -21,7 +21,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         super().__init__("forward")
 
     def get_input_sizes(self, config):
-        return [2]
+        return [4]
 
     def get_output_sizes(self, config):
         return [17]
@@ -30,6 +30,8 @@ class KiTRTModelHohlraum(umbridge.Model):
 
         n_cells = parameters[0][0]
         quad_order = parameters[0][1]
+        x_green = parameters[0][2]
+        y_green = parameters[0][3]
 
         subfolder = "benchmarks/sym_hohlraum/"
         base_config_file = subfolder + "sym_hohlraum.cfg"
@@ -44,6 +46,12 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="MESH_FILE", new_value="mesh/" + hohlraum_file_new
+        )
+        kitrt_parameters = update_parameter(
+            kitrt_parameters, key="POS_CENTER_X", new_value=x_green
+        )
+        kitrt_parameters = update_parameter(
+            kitrt_parameters, key="POS_CENTER_Y", new_value=y_green
         )
 
         # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
