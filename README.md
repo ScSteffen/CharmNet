@@ -9,34 +9,27 @@ Preliminaries:
 
 1. Install [singularity](https://docs.sylabs.io/guides/3.0/user-guide/installation.html) on your system. 
 
+2. Install the python requirements in a local virtual environment
+
+    ```
+    python3 -m venv ./venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
 2. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) on your system.
-    a) Download the git repository and checkout the correct branch (since the new test cases are not yet in release)
+    Use the installer
     ```
-    cd ..
-    git clone git@github.com:CSMMLab/KiT-RT.git
-    cd KiT-RT
-    git checkout new_radiation_test_cases
-    git pull origin
+    sh install_KiT-RT.sh
     ```
 
-    b) Build  the KiT-RT singularity container on your system (root access required).
+    Use the updater to stay up to date with the PDE solver
     ```
-    cd tools/singularity
-    sh build_container.sh
-    cd ../..
-    ```
-    If you use a cluster without root access, build the container locally and upload it to the directory `./tools/singularity/` 
-
-    c) Compile KiT-RT within singularity on your system
-    
-    ```
-    mkdir build
-    cmake ../
-    make -j
+    sh update_KiT-RT.sh
     ```
 
-    d) Copy the KiT-RT executable
-export PATH=/home/8v5/projects/KiT-RT/build:$PATH
+
+
 
 Install the python requirements in a local virtual environment
 
