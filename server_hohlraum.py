@@ -71,7 +71,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
 
         # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
-        log_file_cur = f"sym_hohlraum_n{n_cells}_q{quad_order}"
+        log_file_cur = f"sym_hohlraum_n{n_cells}_q{quad_order}_x{x_green}_y{y_green}_r{right_red_top}_{right_red_bottom}_l{left_red_top}_{left_red_bottom}"
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="LOG_FILE", new_value=log_file_cur
         )
