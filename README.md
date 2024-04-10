@@ -49,6 +49,17 @@ In a nutshell: Each test case, i.e. Lattice, Hohlraum,..., consists of a server 
     3. Runs the KiT-RT solver within the singularity container.
     4. Reads the quantities of interest from the KiT-RT output files, and sends them back to the client script
 
+To run the hohlraum test case, open two (2) terminals and navigate to the CharmKiT directory. In both terminal, activate the CharmKiT local python environment
+
+1. Start the server script:
+```
+    python server_hohlraum.py
+```
+2. Start the client script:
+```
+    python client_hohlraum.py
+```
+3. Wait for the client-server combination to iterate through the test cases that are specified in the client script. (This might take a while)
 
 ## How KiT-RT works
 
