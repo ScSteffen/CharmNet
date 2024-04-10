@@ -103,10 +103,7 @@ Line(28) = {14, 13};
 //+
 Line(29) = {54, 15};
 //+
-Physical Curve("inflow", 60) = {3};
 //+
-Physical Curve("void", 60) += {1, 2,  4, 5, 6, 7, 8, 9, 10, 11, 12,13,14, 29};
-//+//+
 Line(30) = {14, 15};
 //+
 Curve Loop(1) = {10, -16, -15, 9};
@@ -140,3 +137,8 @@ Plane Surface(7) = {7};
 Curve Loop(8) = {26, -2, -1, -14, -24, 25};
 //+
 Plane Surface(8) = {8};
+
+
+Physical Curve("inflow", 60) = {3};
+//+
+Physical Curve("void", 61) = {1, 2,  4, 5, 6, 7, 8, 9, 10, 11, 12,13,14, 29};

@@ -24,7 +24,7 @@ class KiTRTModelQuarterHohlraum(umbridge.Model):
         return [2]
 
     def get_output_sizes(self, config):
-        return [1]
+        return [11]
 
     def __call__(self, parameters, config):
 
@@ -36,7 +36,7 @@ class KiTRTModelQuarterHohlraum(umbridge.Model):
 
         # Step 1: Read the base config file
         kitrt_parameters = read_config_file(base_config_file)
-        lattice_file_new = update_quarter_hohlraum_mesh_file(
+        quarter_hohlraum_file_new = update_quarter_hohlraum_mesh_file(
             n_cells, subfolder + "mesh/"
         )
 
@@ -45,7 +45,9 @@ class KiTRTModelQuarterHohlraum(umbridge.Model):
             kitrt_parameters, key="QUAD_ORDER", new_value=quad_order
         )
         kitrt_parameters = update_parameter(
-            kitrt_parameters, key="MESH_FILE", new_value="mesh/" + lattice_file_new
+            kitrt_parameters,
+            key="MESH_FILE",
+            new_value="mesh/" + quarter_hohlraum_file_new,
         )
 
         # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
@@ -77,8 +79,21 @@ class KiTRTModelQuarterHohlraum(umbridge.Model):
         log_filename = generate_log_filename(kitrt_parameters)
         if log_filename:
             # Step 7: Read and convert the data from the CSV log file to a DataFrame
+
             log_data = read_csv_file(subfolder + log_filename + ".csv")
-            quantities_of_interest = [float(log_data["Wall_time_[s]"])]
+            quantities_of_interest = [
+                float(log_data["Wall_time_[s]"]),
+                float(log_data["Cumulated_absorption_center"]),
+                float(log_data["Cumulated_absorption_vertical_wall"]),
+                float(log_data["Cumulated_absorption_horizontal_wall"]),
+                float(log_data["Var. absorption green"]),
+                float(log_data["Probe 0 u_0"]),
+                float(log_data["Probe 0 u_1"]),
+                float(log_data["Probe 0 u_2"]),
+                float(log_data["Probe 1 u_0"]),
+                float(log_data["Probe 1 u_1"]),
+                float(log_data["Probe 1 u_2"]),
+            ]
 
         return [quantities_of_interest]
 
