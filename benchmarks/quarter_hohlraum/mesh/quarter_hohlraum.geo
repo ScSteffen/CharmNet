@@ -1,4 +1,4 @@
-cl_fine = 0.00075;
+cl_fine = 0.02;
 _cl_finer = cl_fine / 3;
 
 // Outer points

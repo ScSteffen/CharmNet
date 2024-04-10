@@ -1,11 +1,10 @@
-cl_fine = 0.001;
+cl_fine = 0.01;
 n_prog = 1.05;
-cl_fine = 0.001;
+cl_fine = 0.01;
 cl_mid = cl_fine *3;
 cl_coarse = cl_fine * 5;
 cl_coarsest = cl_fine * 10;
 
-cl_fine = 0.001;
 Point(2) = {3.5, -3.5, 0, cl_coarsest};
 
 Point(4) = {3.5, 3.5, 0, cl_coarsest};

@@ -4,7 +4,7 @@ git checkout new_radiation_test_cases
 git submodule update --init --recursive
 mkdir build_singularity
 cd tools/singularity
-sh build_container.sh
+sudo sh build_container.sh
 chmod +x install_kitrt_singularity.sh
 singularity exec kit_rt.sif ./install_kitrt_singularity.sh
 cd ../../../
