@@ -15,6 +15,7 @@ mkdir build_singularity
 cd tools/singularity
 
 # build the singularity container. This requires root privileges
+echo "sudo access needed to build the singularity container. This will hopefully not be neccessary in the future."
 sudo sh build_container.sh
 
 # compile KiT-RT within the singularity container
