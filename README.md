@@ -8,8 +8,12 @@ Preliminaries:
 
 1. Install [singularity](https://docs.sylabs.io/guides/latest/user-guide/quick_start.html) on your system. You can install it anywhere on your computer. 
 
+2. Clone the  `CharmKiT` Github repository: 
+    ```
+    git clone git@github.com:ScSteffen/CharmKiT.git
+    ```
 
-2. Create a local python environment for CharmKiT and install the python requirements in a local virtual environment
+3. Create a local python environment for CharmKiT and install the python requirements in a local virtual environment. Navigate to the   `CharmKiT` base directory and execute
 
     ```
     python3 -m venv ./venv
@@ -17,7 +21,7 @@ Preliminaries:
     pip install -r requirements.txt
     ```
 
-2. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) as a submodule of CharmKiT on your system.
+4. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) as a submodule of CharmKiT on your system.
 
     Use the installer in the CharmKiT folder. Caution: The installer requires root privileges to build the singularity container.
     If you use a cluster without root access, build the container locally and upload it to the directory `CharmKiT/KiT-RT/tools/singularity/`.
