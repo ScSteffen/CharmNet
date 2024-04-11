@@ -20,7 +20,9 @@ Preliminaries:
 2. Install [KiT-RT](https://github.com/CSMMLab/KiT-RT) as a submodule of CharmKiT on your system.
 
     Use the installer in the CharmKiT folder. Caution: The installer requires root privileges to build the singularity container.
-    If you use a cluster without root access, build the container locally and upload it to the directory `CharmKiT/KiT-RT/tools/singularity/` 
+    If you use a cluster without root access, build the container locally and upload it to the directory `CharmKiT/KiT-RT/tools/singularity/`.
+
+    If you have root or sudo access, navigate to the  `CharmKiT` base directory and exectue the install script:
 
     ```
     sh install_KiT-RT.sh
