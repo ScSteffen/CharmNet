@@ -11,7 +11,7 @@ git submodule update --init --recursive
 # create build directory
 mkdir build_singularity
 
-# navigate to directory where the singularity script is located
+# navigate to directory where the singularity .def script is located
 cd tools/singularity
 
 # build the singularity container. This requires root privileges
