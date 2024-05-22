@@ -133,6 +133,50 @@ def update_sym_hohlraum_mesh_file(n_cell, filepath):
     return f"sym_hohlraum_n{n_cell}.su2"
 
 
+def update_var_hohlraum_mesh_file(filepath, cl_fine, upper_left_red, lower_left_red, upper_right_red, lower_right_red,
+                                  horizontal_left_red,horizontal_right_red,capsule_x,capsule_y):
+    filename_geo = filepath + "hohlraum_variable.geo"
+    filename_su2 = filepath + f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}.su2"
+    filename_vtk = filepath + f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}.vtk"
+    filename_con = filepath + f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}.con"
+
+    if not os.path.exists(filename_su2):
+        with open(filename_geo, "r") as file:
+            lines = file.readlines()
+
+        with open(filename_geo, "w") as file:
+            for line in lines:
+                if line.startswith("n_coarse_recombine"):
+                    line = f"cl_fine = {cl_fine};\n"
+                if line.startswith("upper_left_red"):
+                    line = f"upper_left_red = {upper_left_red};\n"
+                if line.startswith("upper_left_red"):
+                    line = f"lower_left_red = {lower_left_red};\n"
+                if line.startswith("upper_left_red"):
+                    line = f"upper_right_red = {upper_right_red};\n"
+                if line.startswith("upper_left_red"):
+                    line = f"lower_right_red = {lower_right_red};\n"
+                if line.startswith("upper_left_red"):
+                    line = f"horizontal_left_red = {horizontal_left_red};\n"
+                if line.startswith("upper_left_red"):
+                    line = f"horizontal_right_red = {horizontal_right_red};\n"
+                if line.startswith("capsule_x"):
+                    line = f"capsule_x = {capsule_x};\n"
+                if line.startswith("capsule_y"):
+                    line = f"capsule_y = {capsule_y};\n"
+                file.write(line)
+
+        # Remove the .con file
+        if os.path.exists(filename_con):
+            os.remove(filename_con)
+
+        print("saving mesh with cl = ", cl_fine)
+        os.system(f"gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}")
+        os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
+
+    return filename_su2
+
+
 def update_lattice_mesh_file(n_cell, filepath):
     filename_geo = filepath + "lattice.geo"
     filename_su2 = filepath + f"lattice_n{n_cell}.su2"

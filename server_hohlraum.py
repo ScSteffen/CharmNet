@@ -8,7 +8,7 @@ from src.config_utils import (
     update_parameter,
     write_config_file,
     remove_files,
-    update_sym_hohlraum_mesh_file,
+    update_var_hohlraum_mesh_file,
 )
 from src.scraping_utils import read_csv_file
 from src.simulation_utils import run_cpp_simulation_containerized
@@ -36,13 +36,19 @@ class KiTRTModelHohlraum(umbridge.Model):
         right_red_bottom = parameters[0][5]
         left_red_top = parameters[0][6]
         left_red_bottom = parameters[0][7]
+        horizontal_left_red = parameters[0][8]
+        horizontal_right_red = parameters[0][9]
 
         subfolder = "benchmarks/hohlraum/"
         base_config_file = subfolder + "hohlraum.cfg"
 
         # Step 1: Read the base config file
         kitrt_parameters = read_config_file(base_config_file)
-        hohlraum_file_new = update_sym_hohlraum_mesh_file(n_cells, subfolder + "mesh/")
+        hohlraum_file_new = update_var_hohlraum_mesh_file(filepath=subfolder + "mesh/",
+                                                          cl_fine=n_cells, capsule_x=x_green, capsule_y=y_green,
+                                                          upper_left_red=left_red_top, lower_left_red=left_red_bottom,
+                                                          upper_right_red=right_red_top, lower_right_red=right_red_bottom,
+                                                          horizontal_left_red=horizontal_left_red, horizontal_right_red=horizontal_right_red)
 
         # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
         kitrt_parameters = update_parameter(
@@ -71,7 +77,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
 
         # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
-        log_file_cur = f"hohlraum_n{n_cells}_q{quad_order}_x{x_green}_y{y_green}_r{right_red_top}_{right_red_bottom}_l{left_red_top}_{left_red_bottom}"
+        log_file_cur = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="LOG_FILE", new_value=log_file_cur
         )
