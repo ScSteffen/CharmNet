@@ -1,5 +1,5 @@
 cl_fine = 0.02;
-cl_smaller =cl_fine/5;
+cl_smaller =cl_fine/3;
 
 upper_left_red = 0.4;
 lower_left_red = -0.4;
@@ -26,15 +26,15 @@ Point(7) = {-0.65, -0.6, 0, cl_fine};
 Point(8) = {0.65, -0.6, 0, cl_fine};
 
 // Red
-Point(9) = {-0.65, upper_left_red, 0, cl_fine};
+Point(9) = {-0.65, upper_left_red, 0, cl_smaller};
 Point(10) = {horizontal_left_red, upper_left_red, 0, cl_smaller};
 Point(11) = {horizontal_left_red, lower_left_red, 0, cl_smaller};
-Point(12) = {-0.65, lower_left_red, 0, cl_fine};
+Point(12) = {-0.65, lower_left_red, 0, cl_smaller};
 
-Point(13) = {0.65, upper_right_red, 0, cl_fine};
+Point(13) = {0.65, upper_right_red, 0, cl_smaller};
 Point(14) = {horizontal_right_red, upper_right_red, 0, cl_smaller};
 Point(15) = {horizontal_right_red,lower_right_red, 0, cl_smaller};
-Point(16) = {0.65, lower_right_red, 0, cl_fine};
+Point(16) = {0.65, lower_right_red, 0, cl_smaller};
 
 // Green (and blue)
 Point(17) = {capsule_x-0.2,capsule_y-0.4, 0, cl_smaller};
@@ -42,10 +42,10 @@ Point(18) = {capsule_x-0.2,capsule_y+0.4, 0, cl_smaller};
 Point(19) = {capsule_x+0.2,capsule_y+0.4, 0, cl_smaller};
 Point(20) = {capsule_x+0.2,capsule_y-0.4, 0, cl_smaller};
 
-Point(21) = {capsule_x-0.15,capsule_y-0.35, 0, cl_smaller};
-Point(22) = {capsule_x-0.15,capsule_y+0.35, 0, cl_smaller};
-Point(23) = {capsule_x+0.15,capsule_y+0.35, 0, cl_smaller};
-Point(24) = {capsule_x+0.15,capsule_y-0.35, 0, cl_smaller};
+Point(21) = {capsule_x-0.15,capsule_y-0.35, 0, cl_fine};
+Point(22) = {capsule_x-0.15,capsule_y+0.35, 0, cl_fine};
+Point(23) = {capsule_x+0.15,capsule_y+0.35, 0, cl_fine};
+Point(24) = {capsule_x+0.15,capsule_y-0.35, 0, cl_fine};
 
 
 // Helper points and lines
