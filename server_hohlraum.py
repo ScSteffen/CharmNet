@@ -10,7 +10,7 @@ from src.config_utils import (
     remove_files,
     update_var_hohlraum_mesh_file,
 )
-from src.scraping_utils import read_csv_file
+from src.scraping_utils import read_csv_file, get_integrated_hohraum_probe_moments
 from src.simulation_utils import run_cpp_simulation_containerized
 from src.general_utils import replace_next_line
 
@@ -24,7 +24,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         return [10]
 
     def get_output_sizes(self, config):
-        return [17]
+        return [125]
 
     def __call__(self, parameters, config):
 
@@ -130,25 +130,68 @@ class KiTRTModelHohlraum(umbridge.Model):
         if log_filename:
             # Step 7: Read and convert the data from the CSV log file to a DataFrame
             log_data = read_csv_file(subfolder + log_filename + ".csv")
+            N = 10
+            integrated_probe_moments = get_integrated_hohraum_probe_moments(
+                subfolder + log_filename + ".csv", N=N
+            )
+            # print(integrated_probe_moments)
             quantities_of_interest = [
                 float(log_data["Wall_time_[s]"]),
                 float(log_data["Cumulated_absorption_center"]),
                 float(log_data["Cumulated_absorption_vertical_wall"]),
                 float(log_data["Cumulated_absorption_horizontal_wall"]),
                 float(log_data["Var. absorption green"]),
-                float(log_data["Probe 0 u_0"]),
-                float(log_data["Probe 0 u_1"]),
-                float(log_data["Probe 0 u_2"]),
-                float(log_data["Probe 1 u_0"]),
-                float(log_data["Probe 1 u_1"]),
-                float(log_data["Probe 1 u_2"]),
-                float(log_data["Probe 2 u_0"]),
-                float(log_data["Probe 2 u_1"]),
-                float(log_data["Probe 2 u_2"]),
-                float(log_data["Probe 3 u_0"]),
-                float(log_data["Probe 3 u_1"]),
-                float(log_data["Probe 3 u_2"]),
             ]
+
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 0 u_0"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 0 u_1"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 0 u_2"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 1 u_0"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 1 u_1"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 1 u_2"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 2 u_0"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 2 u_1"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 2 u_2"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 3 u_0"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 3 u_1"][i])
+                )
+            for i in range(N):
+                quantities_of_interest.append(
+                    float(integrated_probe_moments["Probe 3 u_2"][i])
+                )
+
         # quantities_of_interest = [0]
         return [quantities_of_interest]
 

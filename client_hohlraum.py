@@ -77,7 +77,7 @@ for n_cell in parameter_range_n_cell:
 print("design parameter matrix")
 print(design_params)
 print(
-    "quantities of interest: [ Wall_time_[s],  Cumulated_absorption_center,Cumulated_absorption_vertical_wall,Cumulated_absorption_horizontal_wall,Var. absorption green,Probe 0 u_0,Probe 0 u_1,Probe 0 u_2,Probe 1 u_0,Probe 1 u_1,Probe 1 u_2, Probe 3 u_0,Probe 3 u_1,Probe 3 u_2,Probe 4 u_0,Probe 4 u_1,Probe 4 u_2]"
+    "quantities of interest: [ Wall_time_[s],  Cumulated_absorption_center,Cumulated_absorption_vertical_wall,Cumulated_absorption_horizontal_wall,Var. absorption green,Probe 0 u_0 [N=1:10],Probe 0 u_1 [N=1:10],Probe 0 u_2 [N=1:10],Probe 1 u_0 [N=1:10],Probe 1 u_1 [N=1:10],Probe 1 u_2 [N=1:10], Probe 3 u_0 [N=1:10],Probe 3 u_1 [N=1:10],Probe 3 u_2 [N=1:10],Probe 4 u_0 [N=1:10],Probe 4 u_1 [N=1:10],Probe 4 u_2 [N=1:10]]"
 )
 print(qois)
 print("======== Finished ===========")
