@@ -6,16 +6,17 @@ model = umbridge.HTTPModel(url, "forward")
 
 # Assemble parameter matrix
 # 10 means that the green hohlraum device is 10 grid cells thick. rest of the domain is meshed a bit coarser but accordingly
-parameter_range_n_cell = [5]  # [10, 20, 40]
+parameter_range_n_cell = [0.03]  # [10, 20, 40]
 # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
 parameter_range_quad_order = [10]  # , 20, 30, 40, 50]
-parameter_range_green_center_x = [0.0, 0.01, -0.01]
-parameter_range_green_center_y = [0.0, 0.01, -0.01]
-parameter_range_red_right_top = [0.4, 0.45, 0.35]
-parameter_range_red_right_bottom = [-0.4, -0.45, -0.35]
-parameter_range_red_left_top = [0.4, 0.45, 0.35]
-parameter_range_red_left_bottom = [-0.4, -0.45, -0.35]
-
+parameter_range_green_center_x = [0.1]  # [0.0, 0.01, -0.01]
+parameter_range_green_center_y = [0.05]  # [0.0, 0.01, -0.01]
+parameter_range_red_right_top = [0.5]  # [0.4, 0.45, 0.35]
+parameter_range_red_right_bottom = [-0.5]  # [-0.4, -0.45, -0.35]
+parameter_range_red_left_top = [0.3]  # [0.4, 0.45, 0.35]
+parameter_range_red_left_bottom = [-0.3]  # [-0.4, -0.45, -0.35]
+parameter_range_horizontal_left = [-0.5]  # [-0.61, -0.6, -0.59]
+parameter_range_horizontal_right = [0.62]  # [0.61, 0.6, 0.59]
 design_params = []
 qois = []
 
@@ -28,33 +29,43 @@ for n_cell in parameter_range_n_cell:
                     for right_red_bottom in parameter_range_red_right_bottom:
                         for left_red_top in parameter_range_red_left_top:
                             for left_red_bottom in parameter_range_red_left_bottom:
-                                design_params.append(
-                                    [
-                                        n_cell,
-                                        n_quad,
-                                        x_green,
-                                        y_green,
-                                        right_red_top,
-                                        right_red_bottom,
-                                        left_red_top,
-                                        left_red_bottom,
-                                    ]
-                                )
-                                res = model(
-                                    [
-                                        [
-                                            n_cell,
-                                            n_quad,
-                                            x_green,
-                                            y_green,
-                                            right_red_top,
-                                            right_red_bottom,
-                                            left_red_top,
-                                            left_red_bottom,
-                                        ]
-                                    ]
-                                )
-                                qois.append(res[0])
+                                for (
+                                    horizontal_left_red
+                                ) in parameter_range_horizontal_left:
+                                    for (
+                                        horizontal_right_red
+                                    ) in parameter_range_horizontal_right:
+                                        design_params.append(
+                                            [
+                                                n_cell,
+                                                n_quad,
+                                                x_green,
+                                                y_green,
+                                                right_red_top,
+                                                right_red_bottom,
+                                                left_red_top,
+                                                left_red_bottom,
+                                                horizontal_left_red,
+                                                horizontal_right_red,
+                                            ]
+                                        )
+                                        res = model(
+                                            [
+                                                [
+                                                    n_cell,
+                                                    n_quad,
+                                                    x_green,
+                                                    y_green,
+                                                    right_red_top,
+                                                    right_red_bottom,
+                                                    left_red_top,
+                                                    left_red_bottom,
+                                                    horizontal_left_red,
+                                                    horizontal_right_red,
+                                                ]
+                                            ]
+                                        )
+                                        qois.append(res[0])
 #            file.write(f'sbatch slurm_scripts/slurm_sym_hohlraum_n{n_cell}_q{n_quad}.sh\n')
 
 # with open("slurm_scripts/run_all_sym_hohlraum.sh", "w") as file:

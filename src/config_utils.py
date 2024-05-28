@@ -1,5 +1,6 @@
 import re
 import os
+import shutil
 
 
 def read_config_file(config_file):
@@ -82,15 +83,19 @@ def remove_files(filename):
 
 def update_quarter_hohlraum_mesh_file(n_cell, filepath):
     filename_geo = filepath + "quarter_hohlraum.geo"
+    filename_geo_backup = filepath + "sym_hohlraum_backup.geo"
+
     filename_su2 = filepath + f"quarter_hohlraum_p{n_cell}.su2"
     filename_vtk = filepath + f"quarter_hohlraum_p{n_cell}.vtk"
     filename_con = filepath + f"quarter_hohlraum_p{n_cell}.con"
 
     if not os.path.exists(filename_su2):
-        with open(filename_geo, "r") as file:
+        shutil.copy(filename_geo, filename_geo_backup)
+
+        with open(filename_geo_backup, "r") as file:
             lines = file.readlines()
 
-        with open(filename_geo, "w") as file:
+        with open(filename_geo_backup, "w") as file:
             for line in lines:
                 if line.startswith("cl_fine"):
                     line = f"cl_fine = {n_cell};\n"
@@ -100,23 +105,32 @@ def update_quarter_hohlraum_mesh_file(n_cell, filepath):
         if os.path.exists(filename_con):
             os.remove(filename_con)
 
-        os.system(f"gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}")
-        os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}"
+        )
+        os.remove(filename_geo_backup)
 
     return f"quarter_hohlraum_p{n_cell}.su2"
 
 
 def update_sym_hohlraum_mesh_file(n_cell, filepath):
     filename_geo = filepath + "sym_hohlraum.geo"
+    filename_geo_backup = filepath + "sym_hohlraum_backup.geo"
+
     filename_su2 = filepath + f"sym_hohlraum_n{n_cell}.su2"
     filename_vtk = filepath + f"sym_hohlraum_n{n_cell}.vtk"
     filename_con = filepath + f"sym_hohlraum_n{n_cell}.con"
 
     if not os.path.exists(filename_su2):
-        with open(filename_geo, "r") as file:
+        shutil.copy(filename_geo, filename_geo_backup)
+
+        with open(filename_geo_backup, "r") as file:
             lines = file.readlines()
 
-        with open(filename_geo, "w") as file:
+        with open(filename_geo_backup, "w") as file:
             for line in lines:
                 if line.startswith("n_coarse_recombine"):
                     line = f"n_coarse_recombine = {n_cell};\n"
@@ -127,38 +141,57 @@ def update_sym_hohlraum_mesh_file(n_cell, filepath):
             os.remove(filename_con)
 
         print("saving mesh with n_cell = ", n_cell)
-        os.system(f"gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}")
-        os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}"
+        )
+        os.remove(filename_geo_backup)
 
     return f"sym_hohlraum_n{n_cell}.su2"
 
 
-def update_var_hohlraum_mesh_file(filepath, cl_fine, upper_left_red, lower_left_red, upper_right_red, lower_right_red,
-                                  horizontal_left_red,horizontal_right_red,capsule_x,capsule_y):
+def update_var_hohlraum_mesh_file(
+    filepath,
+    cl_fine,
+    upper_left_red,
+    lower_left_red,
+    upper_right_red,
+    lower_right_red,
+    horizontal_left_red,
+    horizontal_right_red,
+    capsule_x,
+    capsule_y,
+):
     filename_geo = filepath + "hohlraum_variable.geo"
-    filename_su2 = filepath + f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}.su2"
-    filename_vtk = filepath + f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}.vtk"
-    filename_con = filepath + f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}.con"
+    filename_geo_backup = filepath + "hohlraum_variable_backup.geo"
+    unique_neme = f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}"
+    filename_su2 = filepath + unique_neme + ".su2"
+    filename_vtk = filepath + unique_neme + ".vtk"
+    filename_con = filepath + unique_neme + ".con"
 
     if not os.path.exists(filename_su2):
-        with open(filename_geo, "r") as file:
+        shutil.copy(filename_geo, filename_geo_backup)
+
+        with open(filename_geo_backup, "r") as file:
             lines = file.readlines()
 
-        with open(filename_geo, "w") as file:
+        with open(filename_geo_backup, "w") as file:
             for line in lines:
                 if line.startswith("n_coarse_recombine"):
                     line = f"cl_fine = {cl_fine};\n"
                 if line.startswith("upper_left_red"):
                     line = f"upper_left_red = {upper_left_red};\n"
-                if line.startswith("upper_left_red"):
+                if line.startswith("lower_left_red"):
                     line = f"lower_left_red = {lower_left_red};\n"
-                if line.startswith("upper_left_red"):
+                if line.startswith("upper_right_red"):
                     line = f"upper_right_red = {upper_right_red};\n"
-                if line.startswith("upper_left_red"):
+                if line.startswith("lower_right_red"):
                     line = f"lower_right_red = {lower_right_red};\n"
-                if line.startswith("upper_left_red"):
+                if line.startswith("horizontal_left_red"):
                     line = f"horizontal_left_red = {horizontal_left_red};\n"
-                if line.startswith("upper_left_red"):
+                if line.startswith("horizontal_right_red"):
                     line = f"horizontal_right_red = {horizontal_right_red};\n"
                 if line.startswith("capsule_x"):
                     line = f"capsule_x = {capsule_x};\n"
@@ -171,22 +204,28 @@ def update_var_hohlraum_mesh_file(filepath, cl_fine, upper_left_red, lower_left_
             os.remove(filename_con)
 
         print("saving mesh with cl = ", cl_fine)
-        os.system(f"gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}")
-        os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
-
-    return filename_su2
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        # os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
+        os.remove(filename_geo_backup)
+    return unique_neme + ".su2"
 
 
 def update_lattice_mesh_file(n_cell, filepath):
     filename_geo = filepath + "lattice.geo"
+    filename_geo_backup = filepath + "lattice_backup.geo"
+
     filename_su2 = filepath + f"lattice_n{n_cell}.su2"
     filename_con = filepath + f"lattice_n{n_cell}.con"
 
     if not os.path.exists(filename_su2):
-        with open(filename_geo, "r") as file:
+        shutil.copy(filename_geo, filename_geo_backup)
+
+        with open(filename_geo_backup, "r") as file:
             lines = file.readlines()
 
-        with open(filename_geo, "w") as file:
+        with open(filename_geo_backup, "w") as file:
             for line in lines:
                 if line.startswith("n_recombine"):
                     line = f"n_recombine = {n_cell};\n"
@@ -196,22 +235,28 @@ def update_lattice_mesh_file(n_cell, filepath):
         if os.path.exists(filename_con):
             os.remove(filename_con)
 
-        os.system(f"gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}")
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        os.remove(filename_geo_backup)
 
     return f"lattice_n{n_cell}.su2"
 
 
 def update_half_lattice_mesh_file(n_cell, filepath):
     filename_geo = filepath + "half_lattice_homogeneous.geo"
+    filename_geo_backup = filepath + "half_lattice_backup.geo"
     filename_su2 = filepath + f"half_lattice_p{n_cell}.su2"
     filename_vtk = filepath + f"half_lattice_p{n_cell}.vtk"
     filename_con = filepath + f"half_lattice_p{n_cell}.con"
 
     if not os.path.exists(filename_su2):
-        with open(filename_geo, "r") as file:
+        shutil.copy(filename_geo, filename_geo_backup)
+
+        with open(filename_geo_backup, "r") as file:
             lines = file.readlines()
 
-        with open(filename_geo, "w") as file:
+        with open(filename_geo_backup, "w") as file:
             for line in lines:
                 if line.startswith("cl_fine"):
                     line = f"cl_fine = {n_cell};\n"
@@ -221,7 +266,12 @@ def update_half_lattice_mesh_file(n_cell, filepath):
         if os.path.exists(filename_con):
             os.remove(filename_con)
 
-        os.system(f"gmsh {filename_geo} -2 -format su2 -save_all -o {filename_su2}")
-        os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}"
+        )
+        os.remove(filename_geo_backup)
 
     return f"half_lattice_p{n_cell}.su2"

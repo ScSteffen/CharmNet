@@ -21,7 +21,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         super().__init__("forward")
 
     def get_input_sizes(self, config):
-        return [8]
+        return [10]
 
     def get_output_sizes(self, config):
         return [17]
@@ -44,11 +44,18 @@ class KiTRTModelHohlraum(umbridge.Model):
 
         # Step 1: Read the base config file
         kitrt_parameters = read_config_file(base_config_file)
-        hohlraum_file_new = update_var_hohlraum_mesh_file(filepath=subfolder + "mesh/",
-                                                          cl_fine=n_cells, capsule_x=x_green, capsule_y=y_green,
-                                                          upper_left_red=left_red_top, lower_left_red=left_red_bottom,
-                                                          upper_right_red=right_red_top, lower_right_red=right_red_bottom,
-                                                          horizontal_left_red=horizontal_left_red, horizontal_right_red=horizontal_right_red)
+        hohlraum_file_new = update_var_hohlraum_mesh_file(
+            filepath=subfolder + "mesh/",
+            cl_fine=n_cells,
+            capsule_x=x_green,
+            capsule_y=y_green,
+            upper_left_red=left_red_top,
+            lower_left_red=left_red_bottom,
+            upper_right_red=right_red_top,
+            lower_right_red=right_red_bottom,
+            horizontal_left_red=horizontal_left_red,
+            horizontal_right_red=horizontal_right_red,
+        )
 
         # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
         kitrt_parameters = update_parameter(
@@ -75,6 +82,12 @@ class KiTRTModelHohlraum(umbridge.Model):
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="POS_RED_LEFT_BOTTOM", new_value=left_red_bottom
         )
+        kitrt_parameters = update_parameter(
+            kitrt_parameters, key="POS_BORDER_RED_RIGHT", new_value=horizontal_right_red
+        )
+        kitrt_parameters = update_parameter(
+            kitrt_parameters, key="POS_BORDER_RED_LEFT", new_value=horizontal_left_red
+        )
 
         # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
         log_file_cur = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
@@ -90,14 +103,25 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
 
         # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
-        generated_cfg_file = subfolder + f"hohlraum_n{n_cells}_q{quad_order}.cfg"
+        generated_cfg_file = (
+            subfolder
+            + f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}.cfg"
+        )
+
         write_config_file(
             parameters=kitrt_parameters, output_file_path=generated_cfg_file
         )
 
         # Step 5: Run the C++ simulation
-        command = "../../build/KiT-RT " + f"hohlraum_n{n_cells}_q{quad_order}.cfg"
-        slurm_file = "slurm_" + f"hohlraum_n{n_cells}_q{quad_order}.sh"
+        command = (
+            "../../build/KiT-RT "
+            + f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}.cfg"
+        )
+        slurm_file = (
+            "slurm_"
+            + f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}.sh"
+        )
+
         # replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
         run_cpp_simulation_containerized(generated_cfg_file)
 
