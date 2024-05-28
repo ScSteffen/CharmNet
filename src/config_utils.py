@@ -1,6 +1,7 @@
 import re
 import os
 import shutil
+from src.general_utils import replace_next_line
 
 
 def read_config_file(config_file):
@@ -275,3 +276,44 @@ def update_half_lattice_mesh_file(n_cell, filepath):
         os.remove(filename_geo_backup)
 
     return f"half_lattice_p{n_cell}.su2"
+
+
+def write_slurm_file(output_slurm_dir, unique_name):
+    basic_slurm_file = "./slurm_template.sh"
+
+    # Ensure the output directory exists
+    if not os.path.exists(output_slurm_dir):
+        os.makedirs(output_slurm_dir)
+
+    # Read the input file
+    with open(basic_slurm_file, "r") as file:
+        lines = file.readlines()
+
+    # Replace the last line
+    if lines:
+        lines[-1] = (
+            "singularity exec KiT-RT/tools/singularity/kit_rt.sif ./KiT-RT/build_singularity/KiT-RT"
+            + unique_name
+            + ".cfg\n"
+        )
+
+    # Write the modified lines to the output file
+    with open(output_slurm_dir + unique_name + ".sh", "w") as file:
+        file.writelines(lines)
+
+    return 0
+
+
+def read_username_from_config(config_file):
+    """
+    Read the username from the configuration file.
+    The file should have a line in the format USER=<username>.
+    """
+    try:
+        with open(config_file, "r") as file:
+            for line in file:
+                if line.startswith("USER="):
+                    return line.strip().split("=")[1]
+    except Exception as e:
+        print(f"Error reading config file: {e}")
+    return None

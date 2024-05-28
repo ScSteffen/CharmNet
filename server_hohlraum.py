@@ -9,10 +9,10 @@ from src.config_utils import (
     write_config_file,
     remove_files,
     update_var_hohlraum_mesh_file,
+    write_slurm_file,
 )
 from src.scraping_utils import read_csv_file, get_integrated_hohraum_probe_moments
 from src.simulation_utils import run_cpp_simulation_containerized
-from src.general_utils import replace_next_line
 
 
 class KiTRTModelHohlraum(umbridge.Model):
@@ -39,6 +39,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         horizontal_left_red = parameters[0][8]
         horizontal_right_red = parameters[0][9]
         hpc_operation = parameters[0][10]
+
         subfolder = "benchmarks/hohlraum/"
         base_config_file = subfolder + "hohlraum.cfg"
 
@@ -103,96 +104,88 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
 
         # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
-        generated_cfg_file = (
-            subfolder
-            + f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}.cfg"
-        )
+        unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
+        generated_cfg_file = subfolder + unique_name + ".cfg"
 
         write_config_file(
             parameters=kitrt_parameters, output_file_path=generated_cfg_file
         )
+        if hpc_operation == 0:
+            # Step 5: Run the C++ simulation
+            run_cpp_simulation_containerized(generated_cfg_file)
+        elif hpc_operation == 1:
+            # Write slurm file
+            write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name)
 
-        # Step 5: Run the C++ simulation
-        command = (
-            "../../build/KiT-RT "
-            + f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}.cfg"
-        )
-        slurm_file = (
-            "slurm_"
-            + f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}.sh"
-        )
+        if hpc_operation == 0 or hpc_operation == 2:
+            # Step 6: Read the log file
+            log_filename = generate_log_filename(kitrt_parameters)
+            if log_filename:
+                # Step 7: Read and convert the data from the CSV log file to a DataFrame
+                log_data = read_csv_file(subfolder + log_filename + ".csv")
+                N = 10
+                integrated_probe_moments = get_integrated_hohraum_probe_moments(
+                    subfolder + log_filename + ".csv", N=N
+                )
+                # print(integrated_probe_moments)
+                quantities_of_interest = [
+                    float(log_data["Wall_time_[s]"]),
+                    float(log_data["Cumulated_absorption_center"]),
+                    float(log_data["Cumulated_absorption_vertical_wall"]),
+                    float(log_data["Cumulated_absorption_horizontal_wall"]),
+                    float(log_data["Var. absorption green"]),
+                ]
 
-        # replace_next_line("slurm_scripts/slurm_script.txt", command, slurm_file)
-        run_cpp_simulation_containerized(generated_cfg_file)
-
-        # Step 6: Read the log file
-        log_filename = generate_log_filename(kitrt_parameters)
-        if log_filename:
-            # Step 7: Read and convert the data from the CSV log file to a DataFrame
-            log_data = read_csv_file(subfolder + log_filename + ".csv")
-            N = 10
-            integrated_probe_moments = get_integrated_hohraum_probe_moments(
-                subfolder + log_filename + ".csv", N=N
-            )
-            # print(integrated_probe_moments)
-            quantities_of_interest = [
-                float(log_data["Wall_time_[s]"]),
-                float(log_data["Cumulated_absorption_center"]),
-                float(log_data["Cumulated_absorption_vertical_wall"]),
-                float(log_data["Cumulated_absorption_horizontal_wall"]),
-                float(log_data["Var. absorption green"]),
-            ]
-
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 0 u_0"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 0 u_1"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 0 u_2"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 1 u_0"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 1 u_1"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 1 u_2"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 2 u_0"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 2 u_1"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 2 u_2"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 3 u_0"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 3 u_1"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 3 u_2"][i])
-                )
-
-        # quantities_of_interest = [0]
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 0 u_0"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 0 u_1"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 0 u_2"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 1 u_0"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 1 u_1"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 1 u_2"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 2 u_0"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 2 u_1"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 2 u_2"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 3 u_0"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 3 u_1"][i])
+                    )
+                for i in range(N):
+                    quantities_of_interest.append(
+                        float(integrated_probe_moments["Probe 3 u_2"][i])
+                    )
+        else:
+            quantities_of_interest = [0] * 125
         return [quantities_of_interest]
 
     def supports_evaluate(self):
