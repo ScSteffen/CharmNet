@@ -4,6 +4,8 @@ url = "http://localhost:4242"
 model = umbridge.HTTPModel(url, "forward")
 
 
+hpc_operation = True
+
 # Assemble parameter matrix
 # 10 means that the green hohlraum device is 10 grid cells thick. rest of the domain is meshed a bit coarser but accordingly
 parameter_range_n_cell = [0.03]  # [10, 20, 40]
@@ -62,6 +64,7 @@ for n_cell in parameter_range_n_cell:
                                                     left_red_bottom,
                                                     horizontal_left_red,
                                                     horizontal_right_red,
+                                                    hpc_operation
                                                 ]
                                             ]
                                         )

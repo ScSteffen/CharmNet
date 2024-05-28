@@ -21,7 +21,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         super().__init__("forward")
 
     def get_input_sizes(self, config):
-        return [10]
+        return [11]
 
     def get_output_sizes(self, config):
         return [125]
@@ -38,7 +38,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         left_red_bottom = parameters[0][7]
         horizontal_left_red = parameters[0][8]
         horizontal_right_red = parameters[0][9]
-
+        hpc_operation = parameters[0][10]
         subfolder = "benchmarks/hohlraum/"
         base_config_file = subfolder + "hohlraum.cfg"
 
