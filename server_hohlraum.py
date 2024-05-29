@@ -35,12 +35,13 @@ class KiTRTModelHohlraum(umbridge.Model):
 
         horizontal_left_red = parameters[0][4]
         horizontal_right_red = parameters[0][5]
-        
+
         x_green = parameters[0][6]
         y_green = parameters[0][7]
 
         n_cells = parameters[0][8]
-        quad_order = parameters[0][9]
+        print(n_cells)
+        quad_order = int(parameters[0][9])
         hpc_operation = parameters[0][10]
         subfolder = "benchmarks/hohlraum/"
         base_config_file = subfolder + "hohlraum.cfg"

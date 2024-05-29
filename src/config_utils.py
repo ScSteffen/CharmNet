@@ -154,16 +154,16 @@ def update_sym_hohlraum_mesh_file(n_cell, filepath):
 
 
 def update_var_hohlraum_mesh_file(
-    filepath,
-    cl_fine,
-    upper_left_red,
-    lower_left_red,
-    upper_right_red,
-    lower_right_red,
-    horizontal_left_red,
-    horizontal_right_red,
-    capsule_x,
-    capsule_y,
+        filepath,
+        cl_fine,
+        upper_left_red,
+        lower_left_red,
+        upper_right_red,
+        lower_right_red,
+        horizontal_left_red,
+        horizontal_right_red,
+        capsule_x,
+        capsule_y,
 ):
     filename_geo = filepath + "hohlraum_variable.geo"
     filename_geo_backup = filepath + "hohlraum_variable_backup.geo"
@@ -180,7 +180,7 @@ def update_var_hohlraum_mesh_file(
 
         with open(filename_geo_backup, "w") as file:
             for line in lines:
-                if line.startswith("n_coarse_recombine"):
+                if line.startswith("cl_fine"):
                     line = f"cl_fine = {cl_fine};\n"
                 if line.startswith("upper_left_red"):
                     line = f"upper_left_red = {upper_left_red};\n"
@@ -208,8 +208,8 @@ def update_var_hohlraum_mesh_file(
         os.system(
             f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
         )
-        # os.system(f"gmsh {filename_geo} -2 -format vtk -save_all -o {filename_vtk}")
-        os.remove(filename_geo_backup)
+        os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
+        # os.remove(filename_geo_backup)
     return unique_neme + ".su2"
 
 
@@ -291,8 +291,7 @@ def write_slurm_file(output_slurm_dir, unique_name, subfolder):
 
     # Replace the last line
     if lines:
-        lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name            + ".cfg\n"
-        
+        lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
 
     # Write the modified lines to the output file
     with open(output_slurm_dir + unique_name + ".sh", "w") as file:
