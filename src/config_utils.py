@@ -279,7 +279,6 @@ def update_half_lattice_mesh_file(n_cell, filepath):
 
 
 def write_slurm_file(output_slurm_dir, unique_name, subfolder):
-    print("Writing slurm file")
     basic_slurm_file = "./slurm_template.sh"
 
     # Ensure the output directory exists
