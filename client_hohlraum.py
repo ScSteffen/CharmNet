@@ -3,7 +3,7 @@ import numpy as np
 
 from src.config_utils import read_username_from_config
 from src.simulation_utils import execute_slurm_scripts, wait_for_slurm_jobs
-from src.general_utils import create_hohlraum_samples_from_param_range, load_hohlraum_samples_from_npz
+from src.general_utils import create_hohlraum_samples_from_param_range, load_hohlraum_samples_from_npz, delete_slurm_scripts
 
 url = "http://localhost:4242"
 model = umbridge.HTTPModel(url, "forward")
@@ -27,7 +27,7 @@ def main():
     parameter_range_horizontal_right = [0.62]  # [0.61, 0.6, 0.59]
 
     if load_from_npz:
-        design_params = load_hohlraum_samples_from_npz("pilot-study-samples-hohlraum-05-29-24.npz")
+        design_params = load_hohlraum_samples_from_npz("sampling/pilot-study-samples-hohlraum-05-29-24.npz")
     else:
         design_params = create_hohlraum_samples_from_param_range(
             parameter_range_n_cell,
@@ -44,9 +44,10 @@ def main():
 
     if hpc_operation:
         print("==== Execute HPC version ====")
-        call_models(design_params, hpc_operation_count=1,
-                    )
         directory = "./benchmarks/hohlraum/slurm_scripts/"
+
+        delete_slurm_scripts(directory) #delete existing slurm files
+        call_models(design_params, hpc_operation_count=1)
 
         user = read_username_from_config("./slurm_config.txt")
         if user:

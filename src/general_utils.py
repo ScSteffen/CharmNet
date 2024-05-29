@@ -1,6 +1,6 @@
 import subprocess
 import numpy as np
-
+import os
 
 def replace_next_line(input_file, custom_line, output_file):
     with open(input_file, "r") as f:
@@ -44,8 +44,8 @@ def load_hohlraum_samples_from_npz(npz_file):
     samples[4, :] = -0.6 + (0.05 - samples[4, :])  # wl
     samples[5, :] = +0.6 - (0.05 - samples[5, :])  # wr
 
-    cl = samples[6, :].reshape(1, -1)
-    n_quad = samples[7, :].reshape(1, -1)
+    cl = np.copy(samples[6, :].reshape(1, -1))
+    n_quad = np.copy(samples[7, :].reshape(1, -1))
     samples[6, :] = np.zeros(shape=samples[0, :].shape)  # x deviation from center
     samples[7, :] = np.zeros(shape=samples[0, :].shape)  # y deviation from center
 
@@ -97,3 +97,14 @@ def create_hohlraum_samples_from_param_range(
                                                 ]
                                             )
     return np.array(design_params)
+
+
+def delete_slurm_scripts(folder_path):
+    # Get a list of all files in the folder
+    files = os.listdir(folder_path)
+    
+    # Iterate over the files and delete .sh files
+    for file in files:
+        if file.endswith('.sh'):
+            file_path = os.path.join(folder_path, file)
+            os.remove(file_path)
