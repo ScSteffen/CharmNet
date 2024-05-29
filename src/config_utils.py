@@ -278,7 +278,8 @@ def update_half_lattice_mesh_file(n_cell, filepath):
     return f"half_lattice_p{n_cell}.su2"
 
 
-def write_slurm_file(output_slurm_dir, unique_name):
+def write_slurm_file(output_slurm_dir, unique_name, subfolder):
+    print("Writing slurm file")
     basic_slurm_file = "./slurm_template.sh"
 
     # Ensure the output directory exists
@@ -291,11 +292,8 @@ def write_slurm_file(output_slurm_dir, unique_name):
 
     # Replace the last line
     if lines:
-        lines[-1] = (
-            "singularity exec KiT-RT/tools/singularity/kit_rt.sif ./KiT-RT/build_singularity/KiT-RT"
-            + unique_name
-            + ".cfg\n"
-        )
+        lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name            + ".cfg\n"
+        
 
     # Write the modified lines to the output file
     with open(output_slurm_dir + unique_name + ".sh", "w") as file:

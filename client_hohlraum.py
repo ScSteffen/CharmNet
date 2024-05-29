@@ -1,6 +1,6 @@
 import umbridge
 from src.config_utils import read_username_from_config
-from src.simulation_utils import execute_slurm_scripts
+from src.simulation_utils import execute_slurm_scripts ,wait_for_slurm_jobs 
 
 url = "http://localhost:4242"
 model = umbridge.HTTPModel(url, "forward")
@@ -13,7 +13,7 @@ def main():
     parameter_range_n_cell = [0.03]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
     parameter_range_quad_order = [10]  # , 20, 30, 40, 50]
-    parameter_range_green_center_x = [0.1]  # [0.0, 0.01, -0.01]
+    parameter_range_green_center_x = [0.1, -0.1, 0.05]  # [0.0, 0.01, -0.01]
     parameter_range_green_center_y = [0.05]  # [0.0, 0.01, -0.01]
     parameter_range_red_right_top = [0.5]  # [0.4, 0.45, 0.35]
     parameter_range_red_right_bottom = [-0.5]  # [-0.4, -0.45, -0.35]
@@ -36,6 +36,7 @@ def main():
     )
 
     if hpc_operation:
+        print("==== Execute HPC version ====")
         call_models(
             parameter_range_n_cell,
             parameter_range_quad_order,
@@ -53,7 +54,9 @@ def main():
 
         user = read_username_from_config("./slurm_config.txt")
         if user:
+            print("Executing slurm scripts with user " + user)
             execute_slurm_scripts(directory, user)
+            wait_for_slurm_jobs(user=user,sleep_interval=10)
         else:
             print("Username could not be read from config file.")
 
@@ -106,7 +109,7 @@ def call_models(
     parameter_range_red_left_bottom,
     parameter_range_horizontal_left,
     parameter_range_horizontal_right,
-    hpc_operation_count=1,
+    hpc_operation_count,
 ):
     qois = []
 

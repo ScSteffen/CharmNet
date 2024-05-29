@@ -6,7 +6,7 @@ from src.general_utils import get_user_job_count
 
 def run_cpp_simulation(config_file):
     # Path to the C++ executable
-    cpp_executable_path = "KiT-RT/KiT-RT"
+    cpp_executable_path = "./KiT-RT/build/KiT-RT"
 
     # Command to run the C++ executable with the provided config file
     command = [cpp_executable_path, config_file]
@@ -50,8 +50,10 @@ def execute_slurm_scripts(directory, user, max_jobs=10, sleep_time=30):
     If the number of jobs in the queue for the user is 10 or more, wait and sleep for 30 seconds.
     """
     # Get the list of SLURM scripts in the directory
-    slurm_scripts = [f for f in os.listdir(directory) if f.endswith(".slurm")]
+    slurm_scripts = [f for f in os.listdir(directory) if f.endswith(".sh")]
 
+    print(slurm_scripts)
+    
     for script in slurm_scripts:
         script_path = os.path.join(directory, script)
 
@@ -68,7 +70,7 @@ def execute_slurm_scripts(directory, user, max_jobs=10, sleep_time=30):
                 ["sbatch", script_path],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True,
+                universal_newlines=True
             )
             if result.returncode == 0:
                 print(f"Successfully submitted {script}")
@@ -76,3 +78,42 @@ def execute_slurm_scripts(directory, user, max_jobs=10, sleep_time=30):
                 print(f"Failed to submit {script}: {result.stderr}")
         except Exception as e:
             print(f"Error submitting {script}: {e}")
+
+
+
+
+
+
+def wait_for_slurm_jobs(user, sleep_interval=30):
+    """
+    Waits until all SLURM jobs for the specified user are finished.
+    
+    Parameters:
+    - user (str): The username to check SLURM jobs for.
+    - sleep_interval (int): The number of seconds to wait between checks. Default is 30 seconds.
+    """
+    while True:
+        try:
+            # Get the list of jobs for the user
+            result = subprocess.run(['squeue', '-u', user], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            
+            # Split the result into lines
+            lines = result.stdout.strip().split('\n')
+            
+            # The first line is the header, so if there are more than 1 lines, there are running jobs
+            if len(lines) <= 1:
+                print("All SLURM jobs for user '{}' are finished.".format(user))
+                break
+            
+            # Print the current status
+            print("Waiting for SLURM jobs to finish. Current jobs:")
+            for line in lines:
+                print(line)
+            
+            # Wait for the specified interval before checking again
+            time.sleep(sleep_interval)
+        
+        except subprocess.CalledProcessError as e:
+            print("An error occurred while checking SLURM jobs: {}".format(e))
+            break
+

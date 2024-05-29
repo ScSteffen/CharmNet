@@ -39,7 +39,6 @@ class KiTRTModelHohlraum(umbridge.Model):
         horizontal_left_red = parameters[0][8]
         horizontal_right_red = parameters[0][9]
         hpc_operation = parameters[0][10]
-
         subfolder = "benchmarks/hohlraum/"
         base_config_file = subfolder + "hohlraum.cfg"
 
@@ -95,13 +94,15 @@ class KiTRTModelHohlraum(umbridge.Model):
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="LOG_FILE", new_value=log_file_cur
         )
-        remove_files(subfolder + kitrt_parameters["LOG_DIR"] + "/" + log_file_cur)
+        if hpc_operation <2:
+            remove_files(subfolder + kitrt_parameters["LOG_DIR"] + "/" + log_file_cur)
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="OUTPUT_FILE", new_value=log_file_cur
         )
-        remove_files(
-            subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
-        )
+        if hpc_operation <2: 
+            remove_files(
+                subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
+            )
 
         # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
         unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
@@ -115,7 +116,7 @@ class KiTRTModelHohlraum(umbridge.Model):
             run_cpp_simulation_containerized(generated_cfg_file)
         elif hpc_operation == 1:
             # Write slurm file
-            write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name)
+            write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder)
 
         if hpc_operation == 0 or hpc_operation == 2:
             # Step 6: Read the log file
