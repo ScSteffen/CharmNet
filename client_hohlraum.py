@@ -75,7 +75,9 @@ def main():
 def call_models(design_params, hpc_operation_count, ):
     qois = []
     for column in design_params.T:
-        res = model([column.tolist().append(hpc_operation_count)])
+        input = column.tolist()
+        input.append(hpc_operation_count)
+        res = model([input])
         qois.append(res[0])
 
     return np.array(qois)
