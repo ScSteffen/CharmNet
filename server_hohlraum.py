@@ -28,16 +28,20 @@ class KiTRTModelHohlraum(umbridge.Model):
 
     def __call__(self, parameters, config):
 
-        n_cells = parameters[0][0]
-        quad_order = parameters[0][1]
-        x_green = parameters[0][2]
-        y_green = parameters[0][3]
-        right_red_top = parameters[0][4]
-        right_red_bottom = parameters[0][5]
-        left_red_top = parameters[0][6]
-        left_red_bottom = parameters[0][7]
-        horizontal_left_red = parameters[0][8]
-        horizontal_right_red = parameters[0][9]
+        left_red_top = parameters[0][0]
+        left_red_bottom = parameters[0][1]
+        right_red_top = parameters[0][2]
+        right_red_bottom = parameters[0][3]
+
+        horizontal_left_red = parameters[0][4]
+        horizontal_right_red = parameters[0][5]
+        
+        x_green = parameters[0][6]
+        y_green = parameters[0][7]
+
+        n_cells = parameters[0][8]
+        quad_order = parameters[0][9]
+
         hpc_operation = parameters[0][10]
         subfolder = "benchmarks/hohlraum/"
         base_config_file = subfolder + "hohlraum.cfg"
@@ -94,12 +98,12 @@ class KiTRTModelHohlraum(umbridge.Model):
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="LOG_FILE", new_value=log_file_cur
         )
-        if hpc_operation <2:
+        if hpc_operation < 2:
             remove_files(subfolder + kitrt_parameters["LOG_DIR"] + "/" + log_file_cur)
         kitrt_parameters = update_parameter(
             kitrt_parameters, key="OUTPUT_FILE", new_value=log_file_cur
         )
-        if hpc_operation <2: 
+        if hpc_operation < 2:
             remove_files(
                 subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
             )
