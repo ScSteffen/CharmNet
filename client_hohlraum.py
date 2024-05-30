@@ -46,7 +46,7 @@ def main():
         print("==== Execute HPC version ====")
         directory = "./benchmarks/hohlraum/slurm_scripts/"
 
-        delete_slurm_scripts(directory)  # delete existing slurm files
+        delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
         call_models(design_params, hpc_operation_count=1)
 
         user = read_username_from_config("./slurm_config.txt")
