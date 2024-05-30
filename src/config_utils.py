@@ -154,16 +154,16 @@ def update_sym_hohlraum_mesh_file(n_cell, filepath):
 
 
 def update_var_hohlraum_mesh_file(
-        filepath,
-        cl_fine,
-        upper_left_red,
-        lower_left_red,
-        upper_right_red,
-        lower_right_red,
-        horizontal_left_red,
-        horizontal_right_red,
-        capsule_x,
-        capsule_y,
+    filepath,
+    cl_fine,
+    upper_left_red,
+    lower_left_red,
+    upper_right_red,
+    lower_right_red,
+    horizontal_left_red,
+    horizontal_right_red,
+    capsule_x,
+    capsule_y,
 ):
     filename_geo = filepath + "hohlraum_variable.geo"
     filename_geo_backup = filepath + "hohlraum_variable_backup.geo"
@@ -208,8 +208,8 @@ def update_var_hohlraum_mesh_file(
         os.system(
             f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
         )
-        os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
-        # os.remove(filename_geo_backup)
+        # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
+        os.remove(filename_geo_backup)
     return unique_neme + ".su2"
 
 
