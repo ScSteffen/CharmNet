@@ -91,25 +91,20 @@ def main():
     else:
         qois = call_models(design_params, hpc_operation_count=0)
 
-    print(
-        "design parameter matrix: [grid_param, quad_order, scatter value white, absorption value blue]"
-    )
     print("design parameter matrix")
+    print(design_param_names)
     print(design_params)
-    print(
-        "quantities of interest: [Cur_outflow, Total_outflow, Max_outflow, Cur_absorption, Total_absorption, Max_absorption, Wall_time_[s]]"
-    )
+    print("quantities of interest:")
+    print(get_qois_col_names())
     print(qois)
-    np.savez("benchmarks/half_lattice/sn_study_half_lattice_qois.npz", array=qois)
-    np.savez("benchmarks/half_lattice/ssn_study_half_lattice_params.npz", array=design_params)
     np.savez(
-        "benchmarks/hohlraum/ssn_study_half_lattice_params_col_names.npz",
-        array=design_param_names,
+        "benchmarks/half_lattice/sn_study_half_lattice.npz",
+        qois=qois,
+        design_params=design_params,
+        qoi_column_names=get_qois_col_names(),
+        design_param_column_names=design_param_names,
     )
-    np.savez(
-        "benchmarks/hohlraum/ssn_study_half_lattice_qois_col_names.npz",
-        array=get_qois_col_names(),
-    )
+
     print("======== Finished ===========")
     return 0
 
@@ -119,7 +114,6 @@ def call_models(
     hpc_operation_count,
 ):
     qois = []
-    print(design_params.T.shape)
     for column in design_params:
         input = column.tolist()
         print(input)
@@ -219,17 +213,32 @@ def model(parameters):
             log_data["LATTICE_DSGN_ABSORPTION_BLUE"] = absorption_blue_value
             log_data["LATTICE_DSGN_SCATTER_WHITE"] = scatter_white_value
             quantities_of_interest = [
-                float(log_data["Cur_outflow"]),
-                float(log_data["Total_outflow"]),
+                float(log_data["Wall_time_[s]"]),
                 float(log_data["Cur_absorption"]),
                 float(log_data["Total_absorption"]),
-                float(log_data["Max_absorption"]),
-                float(log_data["Wall_time_[s]"]),
+                float(log_data["Cur_outflow_P1"]),
+                float(log_data["Total_outflow_P1"]),
+                float(log_data["Cur_outflow_P2"]),
+                float(log_data["Total_outflow_P2"]),
             ]
     else:
         quantities_of_interest = [0] * 7
 
     return [quantities_of_interest]
+
+
+def get_qois_col_names():
+    return np.array(
+        [
+            "Wall_time_[s]",
+            "Absotption_final_time",
+            "Cumulated_absorption",
+            "Outflow_Perimeter1_final_time",
+            "Cumulated_outflow_Perimeter1",
+            "Outflow_Perimeter2_final_time",
+            "Cumulated_outflow_Perimeter2",
+        ]
+    )
 
 
 if __name__ == "__main__":

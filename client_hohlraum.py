@@ -83,20 +83,17 @@ def main():
         qois = call_models(design_params, hpc_operation_count=0)
 
     print("design parameter matrix")
+    print(design_param_names)
     print(design_params)
-    print(
-        "quantities of interest: [ Wall_time_[s],  Cumulated_absorption_center,Cumulated_absorption_vertical_wall,Cumulated_absorption_horizontal_wall,Var. absorption green,Probe 0 u_0 [N=1:10],Probe 0 u_1 [N=1:10],Probe 0 u_2 [N=1:10],Probe 1 u_0 [N=1:10],Probe 1 u_1 [N=1:10],Probe 1 u_2 [N=1:10], Probe 3 u_0 [N=1:10],Probe 3 u_1 [N=1:10],Probe 3 u_2 [N=1:10],Probe 4 u_0 [N=1:10],Probe 4 u_1 [N=1:10],Probe 4 u_2 [N=1:10]]"
-    )
+    print("quantities of interest:")
+    print(get_qois_col_names())
     print(qois)
-    np.savez("benchmarks/hohlraum/sn_study_hohlraum_qois.npz", array=qois)
-    np.savez("benchmarks/hohlraum/ssn_study_hohlraum_params.npz", array=design_params)
     np.savez(
-        "benchmarks/hohlraum/ssn_study_hohlraum_params_col_names.npz",
-        array=design_param_names,
-    )
-    np.savez(
-        "benchmarks/hohlraum/ssn_study_hohlraum_qois_col_names.npz",
-        array=get_qois_col_names(),
+        "benchmarks/hohlraum/sn_study_hohlraum.npz",
+        qois=qois,
+        design_params=design_params,
+        qoi_column_names=get_qois_col_names(),
+        design_param_column_names=design_param_names,
     )
 
     print("======== Finished ===========")
