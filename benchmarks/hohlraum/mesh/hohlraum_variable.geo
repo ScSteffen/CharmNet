@@ -1,5 +1,5 @@
 cl_fine = 0.02;
-cl_coarse =cl_fine*3;
+cl_coarse =cl_fine*2;
 
 upper_left_red = 0.4;
 lower_left_red = -0.4;
@@ -254,7 +254,7 @@ Curve Loop(24) = {38, 40, 74, 75, 76, -48, -51, -52, -62, -61, -60, 37};
 //+
 Plane Surface(24) = {23, 24};
 
-Recombine Surface "*";
+//Recombine Surface "*";
 //+
 //+
 
