@@ -1,65 +1,112 @@
 import umbridge
+import numpy as np
 
-url = "http://localhost:4242"
+from src.config_utils import read_username_from_config
+from src.simulation_utils import execute_slurm_scripts, wait_for_slurm_jobs
+from src.general_utils import (
+    create_lattice_samples_from_param_range,
+    load_hohlraum_samples_from_npz,
+    delete_slurm_scripts,
+)
+
+url = "http://localhost:4243"
 model = umbridge.HTTPModel(url, "forward")
 
 
-# Assemble parameter matrix
-# design parameter vector is 2d (scatter_white, absorption_blue)
+def main():
+    hpc_operation = False  # Flag when using HPC cluster
+    load_from_npz = False
 
-parameter_range_n_cell = [
-    0.01,
-    0.0075,
-    0.005,
-    0.0025,
-    0.001,
-]  # [10, 20, 40] # 10 means 10^2 cells per lattice square. Cell size reduces with geometric progression (1.05) towards square boundary
-parameter_range_quad_order = [10, 20, 30, 40, 50, 60]  # GAUSS LEGENDRE 2D quadrature
-parameter_range_abs_blue = [
-    10
-]  # [0, 5, 10, 50, 100]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
-parameter_range_scatter_white = [
-    1
-]  # [0, 0.5, 1, 5, 10]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
+    # Define parameter ranges
+    # characteristic length of the cells
+    parameter_range_n_cell = [
+        0.01,
+    ]
+    #    0.0075,
+    #    0.005,
+    #    0.0025,
+    #    0.001,
+    # ]
+    # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
 
-design_params = []
-qois = []
+    parameter_range_quad_order = [
+        10,
+    ]
+    #    20,
+    #    30,
+    #    40,
+    #    50,
+    #    60,
+    # ]  # GAUSS LEGENDRE 2D quadrature
 
-filename = "benchmarks/lattice/pilot-study-samples-lattice-04-15-24.npz"
-samples = np.load(filename)["samples"]
+    parameter_range_abs_blue = [
+        10
+    ]  # [0, 5, 10, 50, 100]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
+    parameter_range_scatter_white = [
+        1
+    ]  # [0, 0.5, 1, 5, 10]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
 
-# with open("slurm_scripts/slurm_run_all_half_lattice.sh", "w") as file:
-for scatter_white_value in parameter_range_scatter_white:
-    for absorption_blue_value in parameter_range_abs_blue:
-        for n_cell in parameter_range_n_cell:
-            for n_quad in parameter_range_quad_order:
-                # for i in range(samples.shape[1]):
-                #    absorption_blue_value, scatter_white_value, n_cell, n_quad = samples[:, i]
-                #    print(
-                #        "Running configuration: [ n_cell, n_quad, scatter_white_value, absorption_blue_value] "
-                #    )
-                #    n_grid = 1 / (2.5 * n_cell)
-                n_grid = n_cell
-                print([n_grid, int(n_quad), scatter_white_value, absorption_blue_value])
+    if load_from_npz:  # TODO
+        design_params = load_hohlraum_samples_from_npz(
+            "sampling/pilot-study-samples-hohlraum-05-29-24.npz"
+        )
+    else:
+        design_params = create_lattice_samples_from_param_range(
+            parameter_range_n_cell,
+            parameter_range_quad_order,
+            parameter_range_abs_blue,
+            parameter_range_scatter_white,
+        )
 
-                design_params.append(
-                    [n_grid, n_quad, scatter_white_value, absorption_blue_value]
-                )
-                res = model(
-                    [[n_grid, n_quad, scatter_white_value, absorption_blue_value]]
-                )
-                qois.append(res[0])
-    # file.write(f'sbatch slurm_scripts/slurm_half_lattice_abs{absorption_blue_value}_scatter{scatter_white_value}_p{n_cell}_q{n_quad}.sh\n')
+    if hpc_operation:
+        print("==== Execute HPC version ====")
+        directory = "./benchmarks/half_lattice/slurm_scripts/"
 
-# run model and print output
-print(
-    "design parameter matrix: [grid_param, quad_order, scatter value white, absorption value blue]"
-)
-print(design_params)
-np.savez("design parameters", samples=design_params)
+        delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
+        call_models(design_params, hpc_operation_count=1)
 
-print(
-    "quantities of interest: [Cur_outflow, Total_outflow, Max_outflow, Cur_absorption, Total_absorption, Max_absorption, Wall_time_[s]]"
-)
-print(qois)
-np.savez("qois", samples=qois)
+        user = read_username_from_config("./slurm_config.txt")
+        if user:
+            print("Executing slurm scripts with user " + user)
+            execute_slurm_scripts(directory, user)
+            wait_for_slurm_jobs(user=user, sleep_interval=10)
+        else:
+            print("Username could not be read from config file.")
+
+        qois = call_models(design_params, hpc_operation_count=2)
+    else:
+        qois = call_models(design_params, hpc_operation_count=0)
+
+    print(
+        "design parameter matrix: [grid_param, quad_order, scatter value white, absorption value blue]"
+    )
+    print("design parameter matrix")
+    print(design_params)
+    print(
+        "quantities of interest: [Cur_outflow, Total_outflow, Max_outflow, Cur_absorption, Total_absorption, Max_absorption, Wall_time_[s]]"
+    )
+    print(qois)
+    np.savez("sn_study_half_lattice.npz", array=qois)
+
+    print("======== Finished ===========")
+    return 0
+
+
+def call_models(
+    design_params,
+    hpc_operation_count,
+):
+    qois = []
+    print(design_params.T.shape)
+    for column in design_params:
+        input = column.tolist()
+        print(input)
+        input.append(hpc_operation_count)
+        res = model([input])
+        qois.append(res[0])
+
+    return np.array(qois)
+
+
+if __name__ == "__main__":
+    main()

@@ -2,6 +2,7 @@ import subprocess
 import numpy as np
 import os
 
+
 def replace_next_line(input_file, custom_line, output_file):
     with open(input_file, "r") as f:
         lines = f.readlines()
@@ -55,16 +56,16 @@ def load_hohlraum_samples_from_npz(npz_file):
 
 
 def create_hohlraum_samples_from_param_range(
-        parameter_range_n_cell,
-        parameter_range_quad_order,
-        parameter_range_green_center_x,
-        parameter_range_green_center_y,
-        parameter_range_red_right_top,
-        parameter_range_red_right_bottom,
-        parameter_range_red_left_top,
-        parameter_range_red_left_bottom,
-        parameter_range_horizontal_left,
-        parameter_range_horizontal_right,
+    parameter_range_n_cell,
+    parameter_range_quad_order,
+    parameter_range_green_center_x,
+    parameter_range_green_center_y,
+    parameter_range_red_right_top,
+    parameter_range_red_right_bottom,
+    parameter_range_red_left_top,
+    parameter_range_red_left_bottom,
+    parameter_range_horizontal_left,
+    parameter_range_horizontal_right,
 ):
     design_params = []
 
@@ -72,12 +73,8 @@ def create_hohlraum_samples_from_param_range(
         for right_red_bottom in parameter_range_red_right_bottom:
             for left_red_top in parameter_range_red_left_top:
                 for left_red_bottom in parameter_range_red_left_bottom:
-                    for (
-                            horizontal_left_red
-                    ) in parameter_range_horizontal_left:
-                        for (
-                                horizontal_right_red
-                        ) in parameter_range_horizontal_right:
+                    for horizontal_left_red in parameter_range_horizontal_left:
+                        for horizontal_right_red in parameter_range_horizontal_right:
                             for x_green in parameter_range_green_center_x:
                                 for y_green in parameter_range_green_center_y:
                                     for n_cell in parameter_range_n_cell:
@@ -99,12 +96,35 @@ def create_hohlraum_samples_from_param_range(
     return np.array(design_params)
 
 
+def create_lattice_samples_from_param_range(
+    parameter_range_n_cell,
+    parameter_range_quad_order,
+    parameter_range_abs_blue,
+    parameter_range_scatter_white,
+):
+    design_params = []
+
+    for abs_blue in parameter_range_abs_blue:
+        for scatter_white in parameter_range_scatter_white:
+            for n_cell in parameter_range_n_cell:
+                for n_quad in parameter_range_quad_order:
+                    design_params.append(
+                        [
+                            abs_blue,
+                            scatter_white,
+                            n_cell,
+                            n_quad,
+                        ]
+                    )
+    return np.array(design_params)
+
+
 def delete_slurm_scripts(folder_path):
     # Get a list of all files in the folder
     files = os.listdir(folder_path)
-    
+
     # Iterate over the files and delete .sh files
     for file in files:
-        if file.endswith('.sh'):
+        if file.endswith(".sh"):
             file_path = os.path.join(folder_path, file)
             os.remove(file_path)

@@ -40,7 +40,6 @@ class KiTRTModelHohlraum(umbridge.Model):
         y_green = parameters[0][7]
 
         n_cells = parameters[0][8]
-        print(n_cells)
         quad_order = int(parameters[0][9])
         hpc_operation = parameters[0][10]
         subfolder = "benchmarks/hohlraum/"
@@ -120,7 +119,9 @@ class KiTRTModelHohlraum(umbridge.Model):
             run_cpp_simulation_containerized(generated_cfg_file)
         elif hpc_operation == 1:
             # Write slurm file
-            write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder)
+            write_slurm_file(
+                "benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder
+            )
 
         if hpc_operation == 0 or hpc_operation == 2:
             # Step 6: Read the log file

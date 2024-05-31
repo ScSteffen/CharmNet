@@ -27,7 +27,9 @@ def main():
     parameter_range_horizontal_right = [0.62]  # [0.61, 0.6, 0.59]
 
     if load_from_npz:
-        design_params = load_hohlraum_samples_from_npz("sampling/pilot-study-samples-hohlraum-05-29-24.npz")
+        design_params = load_hohlraum_samples_from_npz(
+            "sampling/pilot-study-samples-hohlraum-05-29-24.npz"
+        )
     else:
         design_params = create_hohlraum_samples_from_param_range(
             parameter_range_n_cell,
