@@ -24,12 +24,12 @@ from src.general_utils import (
     delete_slurm_scripts,
 )
 
-#url = "http://localhost:4242"
-#model = umbridge.HTTPModel(url, "forward")
+# url = "http://localhost:4242"
+# model = umbridge.HTTPModel(url, "forward")
 
 
 def main():
-    hpc_operation = True  # Flag when using HPC cluster
+    hpc_operation = False  # Flag when using HPC cluster
     load_from_npz = True
 
     # Define parameter ranges
@@ -116,6 +116,7 @@ def call_models(
 
     return np.array(qois)
 
+
 def model(parameters):
     # non umbridge call
     left_red_top = parameters[0][0]
@@ -150,13 +151,14 @@ def model(parameters):
         horizontal_left_red=horizontal_left_red,
         horizontal_right_red=horizontal_right_red,
     )
+    unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
+
     if hpc_operation == 2:
-        unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
         if os.path.exists(
-            subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
+            subfolder + "mesh/" + "hohlraum_variable_backup" + unique_name + ".geo"
         ):
             os.remove(
-                subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
+                subfolder + "mesh/" + "hohlraum_variable_backup" + unique_name + ".geo"
             )  # remove backup geo files
 
     # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
@@ -192,22 +194,20 @@ def model(parameters):
     )
 
     # Step 3: Update LOG_FILE to a unique identifier linked to LATTICE_DSGN_ABSORPTION_BLUE
-    log_file_cur = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
     kitrt_parameters = update_parameter(
-        kitrt_parameters, key="LOG_FILE", new_value=log_file_cur
+        kitrt_parameters, key="LOG_FILE", new_value=unique_name
     )
     if hpc_operation < 2:
-        remove_files(subfolder + kitrt_parameters["LOG_DIR"] + "/" + log_file_cur)
+        remove_files(subfolder + kitrt_parameters["LOG_DIR"] + "/" + unique_name)
     kitrt_parameters = update_parameter(
-        kitrt_parameters, key="OUTPUT_FILE", new_value=log_file_cur
+        kitrt_parameters, key="OUTPUT_FILE", new_value=unique_name
     )
     if hpc_operation < 2:
         remove_files(
-            subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
+            subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + unique_name + ".vtk"
         )
 
     # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
-    unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
     generated_cfg_file = subfolder + unique_name + ".cfg"
 
     write_config_file(parameters=kitrt_parameters, output_file_path=generated_cfg_file)
@@ -226,7 +226,7 @@ def model(parameters):
             log_data = read_csv_file(subfolder + log_filename + ".csv")
             N = 10
             integrated_probe_moments = get_integrated_hohraum_probe_moments(
-                subfolder + log_filename + ".csv", N=N
+                subfolder + log_filename, N=N, t_final=kitrt_parameters["TIME_FINAL"]
             )
             # print(integrated_probe_moments)
             quantities_of_interest = [
