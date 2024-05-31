@@ -154,7 +154,8 @@ def update_sym_hohlraum_mesh_file(n_cell, filepath):
     return f"sym_hohlraum_n{n_cell}.su2"
 
 
-def update_var_hohlraum_mesh_file(hpc_mode,
+def update_var_hohlraum_mesh_file(
+    hpc_mode,
     filepath,
     cl_fine,
     upper_left_red,
@@ -207,17 +208,18 @@ def update_var_hohlraum_mesh_file(hpc_mode,
 
         print("saving mesh with cl = ", cl_fine)
         if hpc_mode:
-            
-            basic_slurm_file = "./slurm_template.sh"
 
+            basic_slurm_file = "./slurm_template.sh"
 
             # Read the input file
             with open(basic_slurm_file, "r") as file:
                 lines = file.readlines()
             # Replace the last line
             if lines:
-                lines[-1] = f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
-            
+                lines[-1] = (
+                    f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
+                )
+
             slurm_script_path = filepath + "gmsh_job.sh"
 
             with open(slurm_script_path, "w") as file:
@@ -226,14 +228,14 @@ def update_var_hohlraum_mesh_file(hpc_mode,
             # Submit SLURM job
             subprocess.run(["sbatch", slurm_script_path])
             # Remove SLURM job script
-            #os.remove(slurm_script_path)
+            # os.remove(slurm_script_path)
 
         else:
             os.system(
                 f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
             )
             # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
-        #os.remove(filename_geo_backup)
+        # os.remove(filename_geo_backup)
     return unique_name + ".su2"
 
 
@@ -315,7 +317,9 @@ def write_slurm_file(output_slurm_dir, unique_name, subfolder):
 
     # Replace the last line
     if lines:
-        lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
+        lines[-1] = (
+            "./KiT-RT/build/KiT-RT " + subfolder + "cfg_files/" + unique_name + ".cfg\n"
+        )
 
     # Write the modified lines to the output file
     with open(output_slurm_dir + unique_name + ".sh", "w") as file:

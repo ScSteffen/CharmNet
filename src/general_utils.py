@@ -51,8 +51,19 @@ def load_hohlraum_samples_from_npz(npz_file):
     samples[7, :] = np.zeros(shape=samples[0, :].shape)  # y deviation from center
 
     samples_full = np.concatenate((samples, cl, n_quad), axis=0)
-
-    return samples_full
+    design_param_names = [
+        "pos_red_left_top",
+        "pos_red_left_bottom",
+        "pos_red_right_top",
+        "pos_red_right_bottom",
+        "pos_red_left_horizontal",
+        "pos_red_right_horizontal",
+        "pos_green_x",
+        "pos_green_y",
+        "grid_cl",
+        "grid_quad_order",
+    ]
+    return samples_full, np.array(design_param_names)
 
 
 def create_hohlraum_samples_from_param_range(
@@ -93,8 +104,19 @@ def create_hohlraum_samples_from_param_range(
                                                     n_quad,
                                                 ]
                                             )
-    design_param_names = ["pos_red_left_top", "pos_red_left_bottom", "pos_red_right_top", "pos_red_right_bottom", "pos_red_left_top", "pos_red_left_bottom", "pos_red_right_top", "pos_red_right_bottom" ]
-    return np.array(design_params)
+    design_param_names = [
+        "pos_red_left_top",
+        "pos_red_left_bottom",
+        "pos_red_right_top",
+        "pos_red_right_bottom",
+        "pos_red_left_horizontal",
+        "pos_red_right_horizontal",
+        "pos_green_x",
+        "pos_green_y",
+        "grid_cl",
+        "grid_quad_order",
+    ]
+    return np.array(design_params), np.array(design_param_names)
 
 
 def create_lattice_samples_from_param_range(
