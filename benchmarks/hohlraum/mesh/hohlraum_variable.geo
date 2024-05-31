@@ -1,5 +1,5 @@
 cl_fine = 0.02;
-cl_smaller =cl_fine/3;
+cl_coarse =cl_fine*3;
 
 upper_left_red = 0.4;
 lower_left_red = -0.4;
@@ -13,58 +13,58 @@ capsule_y = 0.1;
 
 
 // Outer points
-Point(1) = {-0.65, -0.65, 0, cl_fine};
-Point(2) = {0.65, -0.65, 0, cl_fine};
-Point(3) = {-0.65, 0.65, 0, cl_fine};
-Point(4) = {0.65, 0.65, 0, cl_fine};
+Point(1) = {-0.65, -0.65, 0, cl_coarse};
+Point(2) = {0.65, -0.65, 0, cl_coarse};
+Point(3) = {-0.65, 0.65, 0, cl_coarse};
+Point(4) = {0.65, 0.65, 0, cl_coarse};
 
 // Geometry features
 // Black
-Point(5) = {-0.65, 0.6, 0, cl_fine};
-Point(6) = {0.65, 0.6, 0, cl_fine};
-Point(7) = {-0.65, -0.6, 0, cl_fine};
-Point(8) = {0.65, -0.6, 0, cl_fine};
+Point(5) = {-0.65, 0.6, 0, cl_coarse};
+Point(6) = {0.65, 0.6, 0, cl_coarse};
+Point(7) = {-0.65, -0.6, 0, cl_coarse};
+Point(8) = {0.65, -0.6, 0, cl_coarse};
 
 // Red
-Point(9) = {-0.65, upper_left_red, 0, cl_smaller};
-Point(10) = {horizontal_left_red, upper_left_red, 0, cl_smaller};
-Point(11) = {horizontal_left_red, lower_left_red, 0, cl_smaller};
-Point(12) = {-0.65, lower_left_red, 0, cl_smaller};
+Point(9) = {-0.65, upper_left_red, 0, cl_fine};
+Point(10) = {horizontal_left_red, upper_left_red, 0, cl_fine};
+Point(11) = {horizontal_left_red, lower_left_red, 0, cl_fine};
+Point(12) = {-0.65, lower_left_red, 0, cl_fine};
 
-Point(13) = {0.65, upper_right_red, 0, cl_smaller};
-Point(14) = {horizontal_right_red, upper_right_red, 0, cl_smaller};
-Point(15) = {horizontal_right_red,lower_right_red, 0, cl_smaller};
-Point(16) = {0.65, lower_right_red, 0, cl_smaller};
+Point(13) = {0.65, upper_right_red, 0, cl_fine};
+Point(14) = {horizontal_right_red, upper_right_red, 0, cl_fine};
+Point(15) = {horizontal_right_red,lower_right_red, 0, cl_fine};
+Point(16) = {0.65, lower_right_red, 0, cl_fine};
 
 // Green (and blue)
-Point(17) = {capsule_x-0.2,capsule_y-0.4, 0, cl_smaller};
-Point(18) = {capsule_x-0.2,capsule_y+0.4, 0, cl_smaller};
-Point(19) = {capsule_x+0.2,capsule_y+0.4, 0, cl_smaller};
-Point(20) = {capsule_x+0.2,capsule_y-0.4, 0, cl_smaller};
+Point(17) = {capsule_x-0.2,capsule_y-0.4, 0, cl_fine};
+Point(18) = {capsule_x-0.2,capsule_y+0.4, 0, cl_fine};
+Point(19) = {capsule_x+0.2,capsule_y+0.4, 0, cl_fine};
+Point(20) = {capsule_x+0.2,capsule_y-0.4, 0, cl_fine};
 
-Point(21) = {capsule_x-0.15,capsule_y-0.35, 0, cl_fine};
-Point(22) = {capsule_x-0.15,capsule_y+0.35, 0, cl_fine};
-Point(23) = {capsule_x+0.15,capsule_y+0.35, 0, cl_fine};
-Point(24) = {capsule_x+0.15,capsule_y-0.35, 0, cl_fine};
+Point(21) = {capsule_x-0.15,capsule_y-0.35, 0, cl_coarse};
+Point(22) = {capsule_x-0.15,capsule_y+0.35, 0, cl_coarse};
+Point(23) = {capsule_x+0.15,capsule_y+0.35, 0, cl_coarse};
+Point(24) = {capsule_x+0.15,capsule_y-0.35, 0, cl_coarse};
 
 
 // Helper points and lines
-Point(25) = {horizontal_left_red, 0.6, 0, cl_smaller};
-Point(26) = {horizontal_left_red, -0.6, 0, cl_smaller};
-Point(27) = {horizontal_right_red, 0.6, 0, cl_smaller};
-Point(28) = {horizontal_right_red, -0.6, 0, cl_smaller};
+Point(25) = {horizontal_left_red, 0.6, 0, cl_fine};
+Point(26) = {horizontal_left_red, -0.6, 0, cl_fine};
+Point(27) = {horizontal_right_red, 0.6, 0, cl_fine};
+Point(28) = {horizontal_right_red, -0.6, 0, cl_fine};
 
-Point(37) = {horizontal_left_red, 0.65, 0, cl_fine};
-Point(38) = {horizontal_left_red, -0.65, 0, cl_fine};
-Point(39) = {horizontal_right_red, 0.65, 0, cl_fine};
-Point(40) = {horizontal_right_red, -0.65, 0, cl_fine};
+Point(37) = {horizontal_left_red, 0.65, 0, cl_coarse};
+Point(38) = {horizontal_left_red, -0.65, 0, cl_coarse};
+Point(39) = {horizontal_right_red, 0.65, 0, cl_coarse};
+Point(40) = {horizontal_right_red, -0.65, 0, cl_coarse};
 
 
-Point(56) = { cl_fine, -0.6 , 0, cl_fine};
-Point(41) = { - cl_fine, -0.6, 0,cl_fine};
+Point(56) = { cl_coarse, -0.6 , 0, cl_coarse};
+Point(41) = { - cl_coarse, -0.6, 0,cl_coarse};
 
-Point(44) = { cl_fine, 0.6 , 0, cl_fine};
-Point(45) =  { - cl_fine, 0.6 , 0, cl_fine};
+Point(44) = { cl_coarse, 0.6 , 0, cl_coarse};
+Point(45) =  { - cl_coarse, 0.6 , 0, cl_coarse};
 
 
 

@@ -116,7 +116,7 @@ def create_hohlraum_samples_from_param_range(
         "grid_cl",
         "grid_quad_order",
     ]
-    return np.array(design_params), np.array(design_param_names)
+    return np.array(design_params).T, np.array(design_param_names)
 
 
 def create_lattice_samples_from_param_range(

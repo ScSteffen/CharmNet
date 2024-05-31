@@ -1,5 +1,6 @@
 import numpy as np
-#import umbridge
+
+# import umbridge
 import os
 
 from src.config_utils import (
@@ -151,7 +152,9 @@ def model(parameters):
     )
     if hpc_operation == 2:
         unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
-        if os.path.exists(subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"):
+        if os.path.exists(
+            subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
+        ):
             os.remove(
                 subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
             )  # remove backup geo files
@@ -207,17 +210,13 @@ def model(parameters):
     unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
     generated_cfg_file = subfolder + unique_name + ".cfg"
 
-    write_config_file(
-        parameters=kitrt_parameters, output_file_path=generated_cfg_file
-    )
+    write_config_file(parameters=kitrt_parameters, output_file_path=generated_cfg_file)
     if hpc_operation == 0:
         # Step 5: Run the C++ simulation
         run_cpp_simulation_containerized(generated_cfg_file)
     elif hpc_operation == 1:
         # Write slurm file
-        write_slurm_file(
-            "benchmarks/hohlraum/slurm_scripts/",  unique_name, subfolder
-        )
+        write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder)
 
     if hpc_operation == 0 or hpc_operation == 2:
         # Step 6: Read the log file
@@ -288,9 +287,8 @@ def model(parameters):
                 )
     else:
         quantities_of_interest = [0] * 125
-    
+
     return [quantities_of_interest]
-    
 
 
 def get_qois_col_names():

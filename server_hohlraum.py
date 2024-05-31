@@ -62,9 +62,15 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
         if hpc_operation == 2:
             unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
-            if os.path.exists(subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"):
+            if os.path.exists(
+                subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
+            ):
                 os.remove(
-                    subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
+                    subfolder
+                    + "mesh/"
+                    + "hohlraum_variable_backup "
+                    + unique_name
+                    + ".geo"
                 )  # remove backup geo files
 
         # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
@@ -111,12 +117,12 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
         if hpc_operation < 2:
             remove_files(
-            subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
+                subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
             )
 
         # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
         unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
-        generated_cfg_file = subfolder + "cfg_files/" + unique_name + ".cfg"
+        generated_cfg_file = subfolder + unique_name + ".cfg"
 
         write_config_file(
             parameters=kitrt_parameters, output_file_path=generated_cfg_file
@@ -127,7 +133,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         elif hpc_operation == 1:
             # Write slurm file
             write_slurm_file(
-                "benchmarks/hohlraum/slurm_scripts/",  unique_name, subfolder
+                "benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder
             )
 
         if hpc_operation == 0 or hpc_operation == 2:
@@ -199,7 +205,7 @@ class KiTRTModelHohlraum(umbridge.Model):
                     )
         else:
             quantities_of_interest = [0] * 125
-       
+
         return [quantities_of_interest]
 
     def supports_evaluate(self):

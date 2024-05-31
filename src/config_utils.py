@@ -169,7 +169,7 @@ def update_var_hohlraum_mesh_file(
 ):
     filename_geo = filepath + "hohlraum_variable.geo"
     unique_name = f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}"
-    filename_geo_backup = filepath + "backup_ " + unique_name + ".geo"
+    filename_geo_backup = filepath + "backup_" + unique_name + ".geo"
     filename_su2 = filepath + unique_name + ".su2"
     filename_vtk = filepath + unique_name + ".vtk"
     filename_con = filepath + unique_name + ".con"
@@ -317,9 +317,7 @@ def write_slurm_file(output_slurm_dir, unique_name, subfolder):
 
     # Replace the last line
     if lines:
-        lines[-1] = (
-            "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
-        )
+        lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
 
     # Write the modified lines to the output file
     with open(output_slurm_dir + unique_name + ".sh", "w") as file:

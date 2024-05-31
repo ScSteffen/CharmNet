@@ -30,7 +30,7 @@ def run_cpp_simulation_containerized(config_file):
         "exec",
         "KiT-RT/tools/singularity/kit_rt.sif",
         "./KiT-RT/build_singularity/KiT-RT",
-        "cfg_files/" + config_file,
+        config_file,
     ]
 
     # Command to run the C++ executable with the provided config file
