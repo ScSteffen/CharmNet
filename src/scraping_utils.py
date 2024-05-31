@@ -78,9 +78,8 @@ def get_integrated_hohraum_probe_moments(unique_name, t_final, N=10):
     return averages
 
 
-def time_average(df, column_names, N, t_final):
+def time_average(df, column_names, N, t_final, dt):
     averages = {}
-    dt = t_final / N
     for col in column_names:
         data = df[col].values
         interval_length = len(data) // N
