@@ -62,9 +62,10 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
         if hpc_operation == 2:
             unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
-            os.remove(
-                subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
-            )  # remove backup geo files
+            if os.path.exists(subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"):
+                os.remove(
+                    subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo"
+                )  # remove backup geo files
 
         # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
         kitrt_parameters = update_parameter(
