@@ -47,11 +47,12 @@ def main():
     if hpc_operation:
         print("==== Execute HPC version ====")
         directory = "./benchmarks/hohlraum/slurm_scripts/"
+        user = read_username_from_config("./slurm_config.txt")
 
         delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
         call_models(design_params, hpc_operation_count=1)
+        wait_for_slurm_jobs(user=user, sleep_interval=10)
 
-        user = read_username_from_config("./slurm_config.txt")
         if user:
             print("Executing slurm scripts with user " + user)
             execute_slurm_scripts(directory, user)
@@ -69,7 +70,10 @@ def main():
         "quantities of interest: [ Wall_time_[s],  Cumulated_absorption_center,Cumulated_absorption_vertical_wall,Cumulated_absorption_horizontal_wall,Var. absorption green,Probe 0 u_0 [N=1:10],Probe 0 u_1 [N=1:10],Probe 0 u_2 [N=1:10],Probe 1 u_0 [N=1:10],Probe 1 u_1 [N=1:10],Probe 1 u_2 [N=1:10], Probe 3 u_0 [N=1:10],Probe 3 u_1 [N=1:10],Probe 3 u_2 [N=1:10],Probe 4 u_0 [N=1:10],Probe 4 u_1 [N=1:10],Probe 4 u_2 [N=1:10]]"
     )
     print(qois)
-    np.savez('sn_study_hohlraum.npz', array=qois)
+    np.savez('sn_study_hohlraum_qois.npz', array=qois)
+    np.savez('sn_study_hohlraum_params.npz', array=design_params)
+    np.savez('sn_study_hohlraum_params_col_names.npz', array=design_params)
+    
 
     print("======== Finished ===========")
     return 0
