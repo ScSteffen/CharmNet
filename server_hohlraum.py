@@ -111,7 +111,7 @@ class KiTRTModelHohlraum(umbridge.Model):
         )
         if hpc_operation < 2:
             remove_files(
-                subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
+            subfolder + kitrt_parameters["OUTPUT_DIR"] + "/" + log_file_cur + ".vtk"
             )
 
         # Step 4: Write a new config file, named corresponding to LATTICE_DSGN_ABSORPTION_BLUE
@@ -199,6 +199,7 @@ class KiTRTModelHohlraum(umbridge.Model):
                     )
         else:
             quantities_of_interest = [0] * 125
+       
         return [quantities_of_interest]
 
     def supports_evaluate(self):

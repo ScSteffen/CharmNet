@@ -2,16 +2,21 @@ import csv
 from datetime import datetime
 import pandas as pd
 import numpy as np
-
+import os
 
 def read_csv_file(csv_out_file):
     data_dict = {}
 
+    if not os.path.exists(csv_out_file):
+        raise FileNotFoundError(f"File {csv_out_file} not found")
+    print(csv_out_file)
     with open(csv_out_file, "r") as file:
         csv_reader = csv.reader(file)
 
-        # Read the header row
-        header_row = next(csv_reader)
+        try:         # Read the header row
+            header_row = next(csv_reader)
+        except StopIteration:
+            raise ValueError(f"File {csv_out_file} is empty")
 
         # Extract timestamps from the title and last row
         title_timestamp_str = header_row[0].strip()

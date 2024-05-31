@@ -318,7 +318,7 @@ def write_slurm_file(output_slurm_dir, unique_name, subfolder):
     # Replace the last line
     if lines:
         lines[-1] = (
-            "./KiT-RT/build/KiT-RT " + subfolder + "cfg_files/" + unique_name + ".cfg\n"
+            "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
         )
 
     # Write the modified lines to the output file
