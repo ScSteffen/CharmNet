@@ -29,7 +29,7 @@ from src.general_utils import (
 
 
 def main():
-    hpc_operation = False  # Flag when using HPC cluster
+    hpc_operation = True  # Flag when using HPC cluster
     load_from_npz = True
 
     # Define parameter ranges

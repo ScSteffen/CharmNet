@@ -119,6 +119,12 @@ def create_hohlraum_samples_from_param_range(
     return np.array(design_params).T, np.array(design_param_names)
 
 
+def load_lattice_samples_from_npz(npz_file):
+    print("TODO:load_lattice_samples_from_npz ")
+    exit(1)
+    return 0
+
+
 def create_lattice_samples_from_param_range(
     parameter_range_n_cell,
     parameter_range_quad_order,
@@ -139,7 +145,15 @@ def create_lattice_samples_from_param_range(
                             n_quad,
                         ]
                     )
-    return np.array(design_params)
+                    
+    design_param_names = [
+        "absorption_blue",
+        "scattering_white",
+        "grid_cl",
+        "grid_quad_order",
+    ]
+    return np.array(design_params).T, np.array(design_param_names)
+
 
 
 def delete_slurm_scripts(folder_path):

@@ -6,7 +6,7 @@ from src.config_utils import read_username_from_config
 from src.simulation_utils import execute_slurm_scripts, wait_for_slurm_jobs
 from src.general_utils import (
     create_lattice_samples_from_param_range,
-    load_hohlraum_samples_from_npz,
+    load_lattice_samples_from_npz,
     delete_slurm_scripts,
 )
 from src.config_utils import (
@@ -34,7 +34,7 @@ def main():
     # Define parameter ranges
     # characteristic length of the cells
     parameter_range_n_cell = [
-        0.02,
+        0.02, 0.01, 0.005, 0.0025, 0.001,
     ]
     #    0.0075,
     #    0.005,
@@ -44,7 +44,7 @@ def main():
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
 
     parameter_range_quad_order = [
-        10,
+        10, 20, 30, 40, 50
     ]
     #    20,
     #    30,
@@ -61,11 +61,11 @@ def main():
     ]  # [0, 0.5, 1, 5, 10]  # Prescribed range for LATTICE_DSGN_ABSORPTION_BLUE
 
     if load_from_npz:  # TODO
-        design_params = load_hohlraum_samples_from_npz(
+        design_params, design_param_names = load_lattice_samples_from_npz(
             "sampling/pilot-study-samples-hohlraum-05-29-24.npz"
         )
     else:
-        design_params = create_lattice_samples_from_param_range(
+        design_params, design_param_names = create_lattice_samples_from_param_range(
             parameter_range_n_cell,
             parameter_range_quad_order,
             parameter_range_abs_blue,
@@ -100,8 +100,16 @@ def main():
         "quantities of interest: [Cur_outflow, Total_outflow, Max_outflow, Cur_absorption, Total_absorption, Max_absorption, Wall_time_[s]]"
     )
     print(qois)
-    np.savez("sn_study_half_lattice.npz", array=qois)
-
+    np.savez("benchmarks/half_lattice/sn_study_half_lattice_qois.npz", array=qois)
+    np.savez("benchmarks/half_lattice/ssn_study_half_lattice_params.npz", array=design_params)
+    np.savez(
+        "benchmarks/hohlraum/ssn_study_half_lattice_params_col_names.npz",
+        array=design_param_names,
+    )
+    np.savez(
+        "benchmarks/hohlraum/ssn_study_half_lattice_qois_col_names.npz",
+        array=get_qois_col_names(),
+    )
     print("======== Finished ===========")
     return 0
 
