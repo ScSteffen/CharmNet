@@ -40,7 +40,6 @@ class KiTRTModelHohlraum(umbridge.Model):
         y_green = parameters[0][7]
 
         n_cells = parameters[0][8]
-        print(n_cells)
         quad_order = int(parameters[0][9])
         hpc_operation = parameters[0][10]
         subfolder = "benchmarks/hohlraum/"
@@ -48,7 +47,7 @@ class KiTRTModelHohlraum(umbridge.Model):
 
         # Step 1: Read the base config file
         kitrt_parameters = read_config_file(base_config_file)
-        hohlraum_file_new = update_var_hohlraum_mesh_file(
+        hohlraum_file_new = update_var_hohlraum_mesh_file(hpc_mode=(hpc_operation == 1),
             filepath=subfolder + "mesh/",
             cl_fine=n_cells,
             capsule_x=x_green,
@@ -60,6 +59,9 @@ class KiTRTModelHohlraum(umbridge.Model):
             horizontal_left_red=horizontal_left_red,
             horizontal_right_red=horizontal_right_red,
         )
+        if hpc_operation ==2:
+            unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_ulr{left_red_top}_llr{left_red_bottom}_urr{right_red_top}_lrr{right_red_bottom}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{x_green}_cy{y_green}"
+            os.remove(subfolder + "mesh/" + "hohlraum_variable_backup " + unique_name + ".geo") # remove backup geo files
 
         # Step 2: Update kitrt_parameters for the current value of LATTICE_DSGN_ABSORPTION_BLUE
         kitrt_parameters = update_parameter(

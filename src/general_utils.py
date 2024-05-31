@@ -96,6 +96,7 @@ def create_hohlraum_samples_from_param_range(
                                                     n_quad,
                                                 ]
                                             )
+    design_param_names = ["pos_red_left_top", "pos_red_left_bottom", "pos_red_right_top", "pos_red_right_bottom", "pos_red_left_top", "pos_red_left_bottom", "pos_red_right_top", "pos_red_right_bottom" ]
     return np.array(design_params)
 
 
