@@ -111,6 +111,6 @@ Curve Loop(8) = {24, 26, -2, -1, -14};
 Plane Surface(8) = {8};
 
 
-Physical Curve("inflow", 60) = {3};
+Physical Curve("inflow", 60) = {3,4,2};
 //+
-Physical Curve("void", 61) = {1, 2,  4, 5, 6, 7, 8, 9, 10, 11, 12,13,14, 29};
+Physical Curve("void", 61) =  {1, 14, 12, 11, 10, 9, 8, 7, 13, 5};
