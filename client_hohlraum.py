@@ -12,7 +12,7 @@ from src.config_utils import (
     update_var_hohlraum_mesh_file,
     write_slurm_file,
 )
-from src.scraping_utils import read_csv_file, get_integrated_hohraum_probe_moments
+from src.scraping_utils import read_csv_file, get_integrated_hohlraum_probe_moments
 from src.simulation_utils import run_cpp_simulation_containerized
 
 
@@ -222,7 +222,7 @@ def model(parameters):
             # Step 7: Read and convert the data from the CSV log file to a DataFrame
             log_data = read_csv_file(subfolder + log_filename + ".csv")
             N = 10
-            integrated_probe_moments = get_integrated_hohraum_probe_moments(
+            integrated_probe_moments = get_integrated_hohlraum_probe_moments(
                 subfolder + log_filename, N=N, t_final=kitrt_parameters["TIME_FINAL"]
             )
             # print(integrated_probe_moments)

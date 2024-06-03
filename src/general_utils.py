@@ -66,6 +66,26 @@ def load_hohlraum_samples_from_npz(npz_file):
     return samples_full, np.array(design_param_names)
 
 
+def load_quarter_hohlraum_samples_from_npz(npz_file):
+    samples = np.load(npz_file)["samples"]
+    samples[2, :] = 0.4 + (0.2 - samples[2, :])  # tr
+    samples[5, :] = +0.6 - (0.05 - samples[5, :])  # wr
+
+    cl = np.copy(samples[6, :].reshape(1, -1))
+    n_quad = np.copy(samples[7, :].reshape(1, -1))
+    samples[6, :] = np.zeros(shape=samples[0, :].shape)  # x deviation from center
+    samples[7, :] = np.zeros(shape=samples[0, :].shape)  # y deviation from center
+
+    samples_full = np.concatenate((samples, cl, n_quad), axis=0)
+    design_param_names = [
+        "pos_red_right_top",
+        "pos_red_right_horizontal",
+        "grid_cl",
+        "grid_quad_order",
+    ]
+    return samples_full, np.array(design_param_names)
+
+
 def create_hohlraum_samples_from_param_range(
     parameter_range_n_cell,
     parameter_range_quad_order,
@@ -113,6 +133,36 @@ def create_hohlraum_samples_from_param_range(
         "pos_red_right_horizontal",
         "pos_green_x",
         "pos_green_y",
+        "grid_cl",
+        "grid_quad_order",
+    ]
+    return np.array(design_params), np.array(design_param_names)
+
+
+def create_quarter_hohlraum_samples_from_param_range(
+    parameter_range_n_cell,
+    parameter_range_quad_order,
+    parameter_range_red_right_top,
+    parameter_range_horizontal_right,
+):
+    design_params = []
+
+    for right_red_top in parameter_range_red_right_top:
+        for horizontal_right_red in parameter_range_horizontal_right:
+            for n_cell in parameter_range_n_cell:
+                for n_quad in parameter_range_quad_order:
+                    design_params.append(
+                        [
+                            right_red_top,
+                            horizontal_right_red,
+                            n_cell,
+                            n_quad,
+                        ]
+                    )
+    design_param_names = [
+        "pos_red_right_top",
+        "pos_red_right_bottom",
+        "pos_red_right_horizontal",
         "grid_cl",
         "grid_quad_order",
     ]

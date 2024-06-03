@@ -246,7 +246,7 @@ def update_var_quarter_hohlraum_mesh_file(
     upper_right_red,
     horizontal_right_red,
 ):
-    filename_geo = filepath + "hohlraum_variable.geo"
+    filename_geo = filepath + "quarter_hohlraum_variable.geo"
     unique_name = (
         f"hohlraum_variable_cl{cl_fine}_urr{upper_right_red}_hrr{horizontal_right_red}"
     )
@@ -297,14 +297,14 @@ def update_var_quarter_hohlraum_mesh_file(
             # Submit SLURM job
             subprocess.run(["sbatch", slurm_script_path])
             # Remove SLURM job script
-            # os.remove(slurm_script_path)
+            os.remove(slurm_script_path)
 
         else:
             os.system(
                 f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
             )
             # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
-        # os.remove(filename_geo_backup)
+        os.remove(filename_geo_backup)
     return unique_name + ".su2"
 
 

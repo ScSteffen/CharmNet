@@ -12,15 +12,18 @@ from src.config_utils import (
     update_var_quarter_hohlraum_mesh_file,
     write_slurm_file,
 )
-from src.scraping_utils import read_csv_file, get_integrated_hohraum_probe_moments
+from src.scraping_utils import (
+    read_csv_file,
+    get_integrated_quarter_hohlraum_probe_moments,
+)
 from src.simulation_utils import run_cpp_simulation_containerized
 
 
 from src.config_utils import read_username_from_config
 from src.simulation_utils import execute_slurm_scripts, wait_for_slurm_jobs
 from src.general_utils import (
-    create_hohlraum_samples_from_param_range,
-    load_hohlraum_samples_from_npz,
+    create_quarter_hohlraum_samples_from_param_range,
+    load_quarter_hohlraum_samples_from_npz,
     delete_slurm_scripts,
 )
 
@@ -29,39 +32,38 @@ from src.general_utils import (
 
 
 def main():
-    hpc_operation = True  # Flag when using HPC cluster
-    load_from_npz = True
+    hpc_operation = False  # Flag when using HPC cluster
+    load_from_npz = False
 
     # Define parameter ranges
-    parameter_range_n_cell = [0.03]  # characteristic length of the cells
+    parameter_range_n_cell = [
+        # 0.01,
+        # 0.005,
+        # 0.0025,
+        # 0.001,
+        # 0.0005,
+        # 0.00025,
+        0.0001,
+    ]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
     parameter_range_quad_order = [10]  # , 20, 30, 40, 50]
-    parameter_range_green_center_x = [0.1, -0.1, 0.05]  # [0.0, 0.01, -0.01]
-    parameter_range_green_center_y = [0.05]  # [0.0, 0.01, -0.01]
-    parameter_range_red_right_top = [0.5]  # [0.4, 0.45, 0.35]
-    parameter_range_red_right_bottom = [-0.5]  # [-0.4, -0.45, -0.35]
-    parameter_range_red_left_top = [0.3]  # [0.4, 0.45, 0.35]
-    parameter_range_red_left_bottom = [-0.3]  # [-0.4, -0.45, -0.35]
-    parameter_range_horizontal_left = [-0.5]  # [-0.61, -0.6, -0.59]
-    parameter_range_horizontal_right = [0.62]  # [0.61, 0.6, 0.59]
+    parameter_range_red_right_top = [0.4]  # [0.4, 0.45, 0.35]
+    parameter_range_horizontal_right = [0.6]  # [0.61, 0.6, 0.59]
 
     if load_from_npz:
-        design_params, design_param_names = load_hohlraum_samples_from_npz(
+        design_params, design_param_names = load_quarter_hohlraum_samples_from_npz(
             "sampling/pilot-study-samples-hohlraum-05-29-24.npz"
         )
     else:
-        design_params, design_param_names = create_hohlraum_samples_from_param_range(
-            parameter_range_n_cell,
-            parameter_range_quad_order,
-            parameter_range_green_center_x,
-            parameter_range_green_center_y,
-            parameter_range_red_right_top,
-            parameter_range_red_right_bottom,
-            parameter_range_red_left_top,
-            parameter_range_red_left_bottom,
-            parameter_range_horizontal_left,
-            parameter_range_horizontal_right,
+        design_params, design_param_names = (
+            create_quarter_hohlraum_samples_from_param_range(
+                parameter_range_n_cell,
+                parameter_range_quad_order,
+                parameter_range_red_right_top,
+                parameter_range_horizontal_right,
+            )
         )
+        print(design_params)
 
     if hpc_operation:
         print("==== Execute HPC version ====")
@@ -105,7 +107,7 @@ def call_models(
     hpc_operation_count,
 ):
     qois = []
-    for column in design_params.T:
+    for column in design_params:
         input = column.tolist()
         input.append(hpc_operation_count)
         res = model([input])
@@ -116,20 +118,12 @@ def call_models(
 
 def model(parameters):
     # non umbridge call
-    left_red_top = parameters[0][0]
-    left_red_bottom = parameters[0][1]
-    right_red_top = parameters[0][2]
-    right_red_bottom = parameters[0][3]
-
-    horizontal_left_red = parameters[0][4]
-    horizontal_right_red = parameters[0][5]
-
-    x_green = parameters[0][6]
-    y_green = parameters[0][7]
-
-    n_cells = parameters[0][8]
-    quad_order = int(parameters[0][9])
-    hpc_operation = parameters[0][10]
+    print(parameters)
+    right_red_top = parameters[0][0]
+    horizontal_right_red = parameters[0][1]
+    n_cells = parameters[0][2]
+    quad_order = int(parameters[0][3])
+    hpc_operation = parameters[0][4]
     subfolder = "benchmarks/quarter_hohlraum/"
     base_config_file = subfolder + "quarter_hohlraum.cfg"
 
@@ -142,7 +136,7 @@ def model(parameters):
         upper_right_red=right_red_top,
         horizontal_right_red=horizontal_right_red,
     )
-    unique_name = f"hohlraum_variable_cl{n_cells}_q{quad_order}_urr{right_red_top}_hrr{horizontal_right_red}"
+    unique_name = f"quarter_hohlraum_variable_cl{n_cells}_q{quad_order}_urr{right_red_top}_hrr{horizontal_right_red}"
 
     if hpc_operation == 2:
         if os.path.exists(
@@ -208,7 +202,7 @@ def model(parameters):
             # Step 7: Read and convert the data from the CSV log file to a DataFrame
             log_data = read_csv_file(subfolder + log_filename + ".csv")
             N = 10
-            integrated_probe_moments = get_integrated_hohraum_probe_moments(
+            integrated_probe_moments = get_integrated_quarter_hohlraum_probe_moments(
                 subfolder + log_filename, N=N, t_final=kitrt_parameters["TIME_FINAL"]
             )
             # print(integrated_probe_moments)
@@ -243,30 +237,6 @@ def model(parameters):
             for i in range(N):
                 quantities_of_interest.append(
                     float(integrated_probe_moments["Probe 1 u_2"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 2 u_0"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 2 u_1"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 2 u_2"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 3 u_0"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 3 u_1"][i])
-                )
-            for i in range(N):
-                quantities_of_interest.append(
-                    float(integrated_probe_moments["Probe 3 u_2"][i])
                 )
     else:
         quantities_of_interest = [0] * 125
@@ -342,66 +312,6 @@ def get_qois_col_names():
             "Probe1_u2_N8",
             "Probe1_u2_N9",
             "Probe1_u2_N10",
-            "Probe2_u0_N1",
-            "Probe2_u0_N2",
-            "Probe2_u0_N3",
-            "Probe2_u0_N4",
-            "Probe2_u0_N5",
-            "Probe2_u0_N6",
-            "Probe2_u0_N7",
-            "Probe2_u0_N8",
-            "Probe2_u0_N9",
-            "Probe2_u0_N10",
-            "Probe2_u1_N1",
-            "Probe2_u1_N2",
-            "Probe2_u1_N3",
-            "Probe2_u1_N4",
-            "Probe2_u1_N5",
-            "Probe2_u1_N6",
-            "Probe2_u1_N7",
-            "Probe2_u1_N8",
-            "Probe2_u1_N9",
-            "Probe2_u1_N10",
-            "Probe2_u2_N1",
-            "Probe2_u2_N2",
-            "Probe2_u2_N3",
-            "Probe2_u2_N4",
-            "Probe2_u2_N5",
-            "Probe2_u2_N6",
-            "Probe2_u2_N7",
-            "Probe2_u2_N8",
-            "Probe2_u2_N9",
-            "Probe2_u2_N10",
-            "Probe3_u0_N1",
-            "Probe3_u0_N2",
-            "Probe3_u0_N3",
-            "Probe3_u0_N4",
-            "Probe3_u0_N5",
-            "Probe3_u0_N6",
-            "Probe3_u0_N7",
-            "Probe3_u0_N8",
-            "Probe3_u0_N9",
-            "Probe3_u0_N10",
-            "Probe3_u1_N1",
-            "Probe3_u1_N2",
-            "Probe3_u1_N3",
-            "Probe3_u1_N4",
-            "Probe3_u1_N5",
-            "Probe3_u1_N6",
-            "Probe3_u1_N7",
-            "Probe3_u1_N8",
-            "Probe3_u1_N9",
-            "Probe3_u1_N10",
-            "Probe3_u2_N1",
-            "Probe3_u2_N2",
-            "Probe3_u2_N3",
-            "Probe3_u2_N4",
-            "Probe3_u2_N5",
-            "Probe3_u2_N6",
-            "Probe3_u2_N7",
-            "Probe3_u2_N8",
-            "Probe3_u2_N9",
-            "Probe3_u2_N10",
         ]
     )
 
