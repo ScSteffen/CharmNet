@@ -69,7 +69,9 @@ def main():
         user = read_username_from_config("./slurm_config.txt")
 
         delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
-        call_models(design_params, hpc_operation_count=1, singularity_hpc = singularity_hpc)
+        call_models(
+            design_params, hpc_operation_count=1, singularity_hpc=singularity_hpc
+        )
         wait_for_slurm_jobs(user=user, sleep_interval=10)
 
         if user:
@@ -100,10 +102,7 @@ def main():
     return 0
 
 
-def call_models(
-    design_params,
-    hpc_operation_count, singularity_hpc = True
-):
+def call_models(design_params, hpc_operation_count, singularity_hpc=True):
     qois = []
     for column in design_params.T:
         input = column.tolist()
@@ -215,7 +214,12 @@ def model(parameters):
         run_cpp_simulation_containerized(generated_cfg_file)
     elif hpc_operation == 1:
         # Write slurm file
-        write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder,singularity_hpc)
+        write_slurm_file(
+            "benchmarks/hohlraum/slurm_scripts/",
+            unique_name,
+            subfolder,
+            singularity_hpc,
+        )
 
     if hpc_operation == 0 or hpc_operation == 2:
         # Step 6: Read the log file
