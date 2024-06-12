@@ -32,21 +32,24 @@ from src.general_utils import (
 
 
 def main():
-    hpc_operation = False  # Flag when using HPC cluster
+    hpc_operation = True  # Flag when using HPC cluster
     load_from_npz = False
+    singularity_hpc = True
 
     # Define parameter ranges
     parameter_range_n_cell = [
-        # 0.01,
-        # 0.005,
-        # 0.0025,
-        # 0.001,
-        # 0.0005,
-        # 0.00025,
+        0.025,
+        0.01,
+        0.0075,
+        0.005,
+        0.004,
+        0.003,
+        0.0025,
+        0.001,
         0.0001,
     ]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
-    parameter_range_quad_order = [10]  # , 20, 30, 40, 50]
+    parameter_range_quad_order = [10 , 20, 30, 40, 50]
     parameter_range_red_right_top = [0.4]  # [0.4, 0.45, 0.35]
     parameter_range_horizontal_right = [0.6]  # [0.61, 0.6, 0.59]
 
@@ -71,7 +74,7 @@ def main():
         user = read_username_from_config("./slurm_config.txt")
 
         delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
-        call_models(design_params, hpc_operation_count=1)
+        call_models(design_params, hpc_operation_count=1, singularity_hpc=singularity_hpc)
         wait_for_slurm_jobs(user=user, sleep_interval=10)
 
         if user:
@@ -102,14 +105,12 @@ def main():
     return 0
 
 
-def call_models(
-    design_params,
-    hpc_operation_count,
-):
+def call_models(    design_params,    hpc_operation_count, singularity_hpc=True):
     qois = []
     for column in design_params:
         input = column.tolist()
         input.append(hpc_operation_count)
+        input.append(singularity_hpc)
         res = model([input])
         qois.append(res[0])
 
@@ -124,6 +125,8 @@ def model(parameters):
     n_cells = parameters[0][2]
     quad_order = int(parameters[0][3])
     hpc_operation = parameters[0][4]
+    singularity_hpc = parameters[0][5]
+
     subfolder = "benchmarks/quarter_hohlraum/"
     base_config_file = subfolder + "quarter_hohlraum.cfg"
 
@@ -192,7 +195,7 @@ def model(parameters):
     elif hpc_operation == 1:
         # Write slurm file
         write_slurm_file(
-            "benchmarks/quarter_hohlraum/slurm_scripts/", unique_name, subfolder
+            "benchmarks/quarter_hohlraum/slurm_scripts/", unique_name, subfolder, singularity_hpc,
         )
 
     if hpc_operation == 0 or hpc_operation == 2:
