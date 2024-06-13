@@ -155,17 +155,17 @@ def update_sym_hohlraum_mesh_file(n_cell, filepath):
 
 
 def update_var_hohlraum_mesh_file(
-    hpc_mode,
-    filepath,
-    cl_fine,
-    upper_left_red,
-    lower_left_red,
-    upper_right_red,
-    lower_right_red,
-    horizontal_left_red,
-    horizontal_right_red,
-    capsule_x,
-    capsule_y,
+        hpc_mode,
+        filepath,
+        cl_fine,
+        upper_left_red,
+        lower_left_red,
+        upper_right_red,
+        lower_right_red,
+        horizontal_left_red,
+        horizontal_right_red,
+        capsule_x,
+        capsule_y,
 ):
     filename_geo = filepath + "hohlraum_variable.geo"
     unique_name = f"hohlraum_variable_cl{cl_fine}_ulr{upper_left_red}_llr{lower_left_red}_urr{upper_right_red}_lrr{lower_right_red}_hlr{horizontal_left_red}_hrr{horizontal_right_red}_cx{capsule_x}_cy{capsule_y}"
@@ -240,11 +240,11 @@ def update_var_hohlraum_mesh_file(
 
 
 def update_var_quarter_hohlraum_mesh_file(
-    hpc_mode,
-    filepath,
-    cl_fine,
-    upper_right_red,
-    horizontal_right_red,
+        hpc_mode,
+        filepath,
+        cl_fine,
+        upper_right_red,
+        horizontal_right_red,
 ):
     filename_geo = filepath + "quarter_hohlraum_variable.geo"
     unique_name = (
@@ -340,7 +340,7 @@ def update_lattice_mesh_file(n_cell, filepath):
 
 
 def update_half_lattice_mesh_file(n_cell, filepath):
-    filename_geo = filepath + "half_lattice_homogeneous.geo"
+    filename_geo = filepath + "half_lattice_rectangular.geo"  # "half_lattice_homogeneous.geo"
     filename_geo_backup = filepath + "half_lattice_backup.geo"
     filename_su2 = filepath + f"half_lattice_p{n_cell}.su2"
     filename_vtk = filepath + f"half_lattice_p{n_cell}.vtk"
@@ -388,10 +388,10 @@ def write_slurm_file(output_slurm_dir, unique_name, subfolder, singularity=True)
     if lines:
         if singularity:
             lines[-1] = (
-                "singularity exec KiT-RT/tools/singularity/kit_rt.sif ./KiT-RT/build_singularity/KiT-RT "
-                + subfolder
-                + unique_name
-                + ".cfg\n"
+                    "singularity exec KiT-RT/tools/singularity/kit_rt.sif ./KiT-RT/build_singularity/KiT-RT "
+                    + subfolder
+                    + unique_name
+                    + ".cfg\n"
             )
 
         else:
