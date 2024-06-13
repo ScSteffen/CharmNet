@@ -48,7 +48,7 @@ def read_csv_file(csv_out_file):
     return data_dict
 
 
-def get_integrated_hohraum_probe_moments(unique_name, t_final, N=10):
+def get_integrated_hohlraum_probe_moments(unique_name, t_final, N=10):
     dt = extract_time_step(unique_name)
 
     csv_out_file = unique_name + ".csv"
@@ -67,6 +67,30 @@ def get_integrated_hohraum_probe_moments(unique_name, t_final, N=10):
         "Probe 3 u_0",
         "Probe 3 u_1",
         "Probe 3 u_2",
+    ]
+
+    # Define the number of intervals
+    # N = 10  # Replace with the desired number of intervals
+
+    # Compute the time averages
+    averages = time_average(df, column_names, N, t_final, dt)
+    # print(averages)
+    return averages
+
+
+def get_integrated_quarter_hohlraum_probe_moments(unique_name, t_final, N=10):
+    dt = extract_time_step(unique_name)
+
+    csv_out_file = unique_name + ".csv"
+    df = pd.read_csv(csv_out_file)
+    # Specify the column names to be averaged
+    column_names = [
+        "Probe 0 u_0",
+        "Probe 0 u_1",
+        "Probe 0 u_2",
+        "Probe 1 u_0",
+        "Probe 1 u_1",
+        "Probe 1 u_2",
     ]
 
     # Define the number of intervals

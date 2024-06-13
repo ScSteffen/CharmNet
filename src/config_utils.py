@@ -239,6 +239,75 @@ def update_var_hohlraum_mesh_file(
     return unique_name + ".su2"
 
 
+def update_var_quarter_hohlraum_mesh_file(
+    hpc_mode,
+    filepath,
+    cl_fine,
+    upper_right_red,
+    horizontal_right_red,
+):
+    filename_geo = filepath + "quarter_hohlraum_variable.geo"
+    unique_name = (
+        f"hohlraum_variable_cl{cl_fine}_urr{upper_right_red}_hrr{horizontal_right_red}"
+    )
+    filename_geo_backup = filepath + "backup_" + unique_name + ".geo"
+    filename_su2 = filepath + unique_name + ".su2"
+    filename_vtk = filepath + unique_name + ".vtk"
+    filename_con = filepath + unique_name + ".con"
+
+    if not os.path.exists(filename_su2):
+        shutil.copy(filename_geo, filename_geo_backup)
+
+        with open(filename_geo_backup, "r") as file:
+            lines = file.readlines()
+
+        with open(filename_geo_backup, "w") as file:
+            for line in lines:
+                if line.startswith("cl_fine"):
+                    line = f"cl_fine = {cl_fine};\n"
+                if line.startswith("upper_right_red"):
+                    line = f"upper_right_red = {upper_right_red};\n"
+                if line.startswith("horizontal_right_red"):
+                    line = f"horizontal_right_red = {horizontal_right_red};\n"
+                file.write(line)
+
+        # Remove the .con file
+        if os.path.exists(filename_con):
+            os.remove(filename_con)
+
+        print("saving mesh with cl = ", cl_fine)
+        if hpc_mode:
+
+            basic_slurm_file = "./slurm_template.sh"
+
+            # Read the input file
+            with open(basic_slurm_file, "r") as file:
+                lines = file.readlines()
+            # Replace the last line
+            if lines:
+                lines[-1] = (
+                    f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
+                )
+
+            slurm_script_path = filepath + "gmsh_job.sh"
+
+            with open(slurm_script_path, "w") as file:
+                file.writelines(lines)
+
+            # Submit SLURM job
+            subprocess.run(["sbatch", slurm_script_path])
+            # Remove SLURM job script
+            os.remove(slurm_script_path)
+
+        else:
+            os.system(
+                f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+            )
+            # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
+        os.remove(filename_geo_backup)
+    return unique_name + ".su2"
+
+
 def update_lattice_mesh_file(n_cell, filepath):
     filename_geo = filepath + "lattice.geo"
     filename_geo_backup = filepath + "lattice_backup.geo"
@@ -304,7 +373,7 @@ def update_half_lattice_mesh_file(n_cell, filepath):
     return f"half_lattice_p{n_cell}.su2"
 
 
-def write_slurm_file(output_slurm_dir, unique_name, subfolder):
+def write_slurm_file(output_slurm_dir, unique_name, subfolder, singularity=True):
     basic_slurm_file = "./slurm_template.sh"
 
     # Ensure the output directory exists
@@ -317,7 +386,16 @@ def write_slurm_file(output_slurm_dir, unique_name, subfolder):
 
     # Replace the last line
     if lines:
-        lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
+        if singularity:
+            lines[-1] = (
+                "singularity exec KiT-RT/tools/singularity/kit_rt.sif ./KiT-RT/build_singularity/KiT-RT "
+                + subfolder
+                + unique_name
+                + ".cfg\n"
+            )
+
+        else:
+            lines[-1] = "./KiT-RT/build/KiT-RT " + subfolder + unique_name + ".cfg\n"
 
     # Write the modified lines to the output file
     with open(output_slurm_dir + unique_name + ".sh", "w") as file:

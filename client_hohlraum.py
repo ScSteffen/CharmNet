@@ -12,7 +12,7 @@ from src.config_utils import (
     update_var_hohlraum_mesh_file,
     write_slurm_file,
 )
-from src.scraping_utils import read_csv_file, get_integrated_hohraum_probe_moments
+from src.scraping_utils import read_csv_file, get_integrated_hohlraum_probe_moments
 from src.simulation_utils import run_cpp_simulation_containerized
 
 
@@ -31,9 +31,9 @@ from src.general_utils import (
 def main():
     hpc_operation = True  # Flag when using HPC cluster
     load_from_npz = True
-
+    singularity_hpc = False
     # Define parameter ranges
-    parameter_range_n_cell = [0.03]  # characteristic length of the cells
+    parameter_range_n_cell = [0.09, 0.08, 0.07,0.06,0.05,0.04,0.03,0.01,0.0075,0.005, 0.0025,0.002]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
     parameter_range_quad_order = [10]  # , 20, 30, 40, 50]
     parameter_range_green_center_x = [0.1, -0.1, 0.05]  # [0.0, 0.01, -0.01]
@@ -47,7 +47,7 @@ def main():
 
     if load_from_npz:
         design_params, design_param_names = load_hohlraum_samples_from_npz(
-            "sampling/pilot-study-samples-hohlraum-05-29-24.npz"
+            "sampling/pilot-study-samples-hohlraum-05-29-24.npz" 
         )
     else:
         design_params, design_param_names = create_hohlraum_samples_from_param_range(
@@ -69,7 +69,9 @@ def main():
         user = read_username_from_config("./slurm_config.txt")
 
         delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
-        call_models(design_params, hpc_operation_count=1)
+        call_models(
+            design_params, hpc_operation_count=1, singularity_hpc=singularity_hpc
+        )
         wait_for_slurm_jobs(user=user, sleep_interval=10)
 
         if user:
@@ -100,14 +102,12 @@ def main():
     return 0
 
 
-def call_models(
-    design_params,
-    hpc_operation_count,
-):
+def call_models(design_params, hpc_operation_count, singularity_hpc=True):
     qois = []
     for column in design_params.T:
         input = column.tolist()
         input.append(hpc_operation_count)
+        input.append(singularity_hpc)
         res = model([input])
         qois.append(res[0])
 
@@ -130,6 +130,7 @@ def model(parameters):
     n_cells = parameters[0][8]
     quad_order = int(parameters[0][9])
     hpc_operation = parameters[0][10]
+    singularity_hpc = parameters[0][11]
     subfolder = "benchmarks/hohlraum/"
     base_config_file = subfolder + "hohlraum.cfg"
 
@@ -213,7 +214,12 @@ def model(parameters):
         run_cpp_simulation_containerized(generated_cfg_file)
     elif hpc_operation == 1:
         # Write slurm file
-        write_slurm_file("benchmarks/hohlraum/slurm_scripts/", unique_name, subfolder)
+        write_slurm_file(
+            "benchmarks/hohlraum/slurm_scripts/",
+            unique_name,
+            subfolder,
+            singularity_hpc,
+        )
 
     if hpc_operation == 0 or hpc_operation == 2:
         # Step 6: Read the log file
@@ -222,7 +228,7 @@ def model(parameters):
             # Step 7: Read and convert the data from the CSV log file to a DataFrame
             log_data = read_csv_file(subfolder + log_filename + ".csv")
             N = 10
-            integrated_probe_moments = get_integrated_hohraum_probe_moments(
+            integrated_probe_moments = get_integrated_hohlraum_probe_moments(
                 subfolder + log_filename, N=N, t_final=kitrt_parameters["TIME_FINAL"]
             )
             # print(integrated_probe_moments)
