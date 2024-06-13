@@ -25,5 +25,5 @@ Curve Loop(1) = {4, 1, -2, 3};
 Plane Surface(1) = {1};
 Transfinite Surface {1};
 Physical Curve("void", 61) =  {1, 2, 3};
-Physical Curve("reflecting", 4);
+Physical Curve("reflecting") = {4};
 Recombine Surface "*";
