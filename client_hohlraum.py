@@ -28,12 +28,56 @@ from src.general_utils import (
 # model = umbridge.HTTPModel(url, "forward")
 
 
+import argparse
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Process some flags for HPC and mesh operations."
+    )
+
+    # Add arguments
+    parser.add_argument(
+        "--no-hpc", action="store_true", help="Flag when using HPC cluster"
+    )
+    parser.add_argument(
+        "--load-from-npz", action="store_true", help="Flag to load from NPZ file"
+    )
+    parser.add_argument(
+        "--no-singularity-hpc",
+        action="store_true",
+        help="Flag to use Singularity on HPC",
+    )
+
+    args = parser.parse_args()
+    return args
+
+
 def main():
-    hpc_operation = True  # Flag when using HPC cluster
-    load_from_npz = True
-    singularity_hpc = False
+    args = parse_args()
+    print(f"HPC mode = { not args.no_hpc}")
+    print(f"Load from npz = {args.load_from_npz}")
+    print(f"HPC with singularity = { not args.no_singularity_hpc}")
+
+    hpc_operation = not args.no_hpc  # Flag when using HPC cluster
+    load_from_npz = args.load_from_npz
+    singularity_hpc = not args.no_singularity_hpc
+
     # Define parameter ranges
-    parameter_range_n_cell = [0.09, 0.08, 0.07,0.06,0.05,0.04,0.03,0.01,0.0075,0.005, 0.0025,0.002]  # characteristic length of the cells
+    parameter_range_n_cell = [
+        0.09,
+        0.08,
+        0.07,
+        0.06,
+        0.05,
+        0.04,
+        0.03,
+        0.01,
+        0.0075,
+        0.005,
+        0.0025,
+        0.002,
+    ]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
     parameter_range_quad_order = [10]  # , 20, 30, 40, 50]
     parameter_range_green_center_x = [0.1, -0.1, 0.05]  # [0.0, 0.01, -0.01]
@@ -47,7 +91,7 @@ def main():
 
     if load_from_npz:
         design_params, design_param_names = load_hohlraum_samples_from_npz(
-            "sampling/pilot-study-samples-hohlraum-05-29-24.npz" 
+            "sampling/pilot-study-samples-hohlraum-05-29-24.npz"
         )
     else:
         design_params, design_param_names = create_hohlraum_samples_from_param_range(

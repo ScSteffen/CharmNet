@@ -29,12 +29,47 @@ from src.general_utils import (
 
 # url = "http://localhost:4242"
 # model = umbridge.HTTPModel(url, "forward")
+import argparse
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Process some flags for HPC and mesh operations."
+    )
+
+    # Add arguments
+    parser.add_argument(
+        "--no-hpc", action="store_true", help="Flag when using HPC cluster"
+    )
+    parser.add_argument(
+        "--load-from-npz", action="store_true", help="Flag to load from NPZ file"
+    )
+    parser.add_argument(
+        "--no-singularity-hpc",
+        action="store_true",
+        help="Flag to use Singularity on HPC",
+    )
+    parser.add_argument(
+        "--rectangular-mesh",
+        action="store_true",
+        help="Flag for using rectangular mesh",
+    )
+
+    args = parser.parse_args()
+    return args
 
 
 def main():
-    hpc_operation = False  # Flag when using HPC cluster
-    load_from_npz = False
-    singularity_hpc = True
+    args = parse_args()
+    print(f"HPC mode = { not args.no_hpc}")
+    print(f"Load from npz = {args.load_from_npz}")
+    print(f"HPC with singularity = { not args.no_singularity_hpc}")
+    print(f"Use rectangular_mesh = {args.rectangular_mesh}")
+
+    hpc_operation = not args.no_hpc  # Flag when using HPC cluster
+    load_from_npz = args.load_from_npz
+    singularity_hpc = not args.no_singularity_hpc
+    rectangular_mesh = args.rectangular_mesh
 
     # Define parameter ranges
     parameter_range_n_cell = [
@@ -76,7 +111,10 @@ def main():
 
         delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
         call_models(
-            design_params, hpc_operation_count=1, singularity_hpc=singularity_hpc
+            design_params,
+            hpc_operation_count=1,
+            singularity_hpc=singularity_hpc,
+            rectangular_mesh=rectangular_mesh,
         )
         wait_for_slurm_jobs(user=user, sleep_interval=10)
 
@@ -88,7 +126,9 @@ def main():
             print("Username could not be read from slurm config file.")
         qois = call_models(design_params, hpc_operation_count=2)
     else:
-        qois = call_models(design_params, hpc_operation_count=0)
+        qois = call_models(
+            design_params, hpc_operation_count=0, rectangular_mesh=rectangular_mesh
+        )
 
     print("design parameter matrix")
     print(design_param_names)
@@ -108,12 +148,16 @@ def main():
     return 0
 
 
-def call_models(design_params, hpc_operation_count, singularity_hpc=True):
+def call_models(
+    design_params, hpc_operation_count, singularity_hpc=True, rectangular_mesh=False
+):
     qois = []
     for column in design_params:
         input = column.tolist()
         input.append(hpc_operation_count)
         input.append(singularity_hpc)
+        input.append(rectangular_mesh)
+
         res = model([input])
         qois.append(res[0])
 
@@ -129,6 +173,7 @@ def model(parameters):
     quad_order = int(parameters[0][3])
     hpc_operation = parameters[0][4]
     singularity_hpc = parameters[0][5]
+    rectangular_mesh = parameters[0][7]
 
     subfolder = "benchmarks/quarter_hohlraum/"
     base_config_file = subfolder + "quarter_hohlraum.cfg"
@@ -141,6 +186,7 @@ def model(parameters):
         cl_fine=n_cells,
         upper_right_red=right_red_top,
         horizontal_right_red=horizontal_right_red,
+        rectangular_mesh=rectangular_mesh,
     )
     unique_name = f"quarter_hohlraum_variable_cl{n_cells}_q{quad_order}_urr{right_red_top}_hrr{horizontal_right_red}"
 
