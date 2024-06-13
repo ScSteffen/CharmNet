@@ -30,6 +30,7 @@ from src.general_utils import replace_next_line
 def main():
     hpc_operation = False  # Flag when using HPC cluster
     load_from_npz = False
+    singularity_hpc = True
 
     # Define parameter ranges
     # characteristic length of the cells
@@ -73,7 +74,9 @@ def main():
         directory = "./benchmarks/half_lattice/slurm_scripts/"
 
         delete_slurm_scripts(directory)  # delete existing slurm files for hohlraum
-        call_models(design_params, hpc_operation_count=1)
+        call_models(
+            design_params, hpc_operation_count=1, singularity_hpc=singularity_hpc
+        )
 
         user = read_username_from_config("./slurm_config.txt")
         if user:
@@ -105,15 +108,14 @@ def main():
     return 0
 
 
-def call_models(
-    design_params,
-    hpc_operation_count,
-):
+def call_models(design_params, hpc_operation_count, singularity_hpc=True):
     qois = []
     for column in design_params:
         input = column.tolist()
         print(input)
         input.append(hpc_operation_count)
+        input.append(singularity_hpc)
+
         res = model([input])
         qois.append(res[0])
 
@@ -135,6 +137,7 @@ def model(parameters):
     quad_order = int(parameters[0][3])
 
     hpc_operation = parameters[0][4]
+    singularity_hpc = parameters[0][5]
 
     subfolder = "benchmarks/half_lattice/"
     base_config_file = subfolder + "half_lattice.cfg"
@@ -196,7 +199,10 @@ def model(parameters):
     elif hpc_operation == 1:
         # Write slurm file
         write_slurm_file(
-            "benchmarks/half_lattice/slurm_scripts/", unique_name, subfolder
+            "benchmarks/half_lattice/slurm_scripts/",
+            unique_name,
+            subfolder,
+            singularity_hpc,
         )
 
     # Step 6: Read the log file

@@ -207,35 +207,35 @@ def update_var_hohlraum_mesh_file(
             os.remove(filename_con)
 
         print("saving mesh with cl = ", cl_fine)
-        if hpc_mode:
-
-            basic_slurm_file = "./slurm_template.sh"
-
-            # Read the input file
-            with open(basic_slurm_file, "r") as file:
-                lines = file.readlines()
-            # Replace the last line
-            if lines:
-                lines[-1] = (
-                    f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
-                )
-
-            slurm_script_path = filepath + "gmsh_job.sh"
-
-            with open(slurm_script_path, "w") as file:
-                file.writelines(lines)
-
-            # Submit SLURM job
-            subprocess.run(["sbatch", slurm_script_path])
-            # Remove SLURM job script
-            # os.remove(slurm_script_path)
-
-        else:
-            os.system(
-                f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
-            )
-            # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
-        # os.remove(filename_geo_backup)
+        # if hpc_mode:
+        #
+        #    basic_slurm_file = "./slurm_template.sh"
+        #
+        #    # Read the input file
+        #    with open(basic_slurm_file, "r") as file:
+        #        lines = file.readlines()
+        #    # Replace the last line
+        #    if lines:
+        #        lines[-1] = (
+        #            f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
+        #        )
+        #
+        #    slurm_script_path = filepath + "gmsh_job.sh"
+        #
+        #    with open(slurm_script_path, "w") as file:
+        #        file.writelines(lines)
+        #
+        #    # Submit SLURM job
+        #    subprocess.run(["sbatch", slurm_script_path])
+        #    # Remove SLURM job script
+        #    # os.remove(slurm_script_path)
+        #
+        # else:
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
+        os.remove(filename_geo_backup)
     return unique_name + ".su2"
 
 
@@ -246,7 +246,9 @@ def update_var_quarter_hohlraum_mesh_file(
     upper_right_red,
     horizontal_right_red,
 ):
-    filename_geo = filepath + "quarter_hohlraum_variable.geo"
+    filename_geo = (
+        filepath + "quarter_hohlraum_variable.geo"
+    )  # "quarter_hohlraum_rectangular.geo"
     unique_name = (
         f"hohlraum_variable_cl{cl_fine}_urr{upper_right_red}_hrr{horizontal_right_red}"
     )
@@ -276,34 +278,34 @@ def update_var_quarter_hohlraum_mesh_file(
             os.remove(filename_con)
 
         print("saving mesh with cl = ", cl_fine)
-        if hpc_mode:
-
-            basic_slurm_file = "./slurm_template.sh"
-
-            # Read the input file
-            with open(basic_slurm_file, "r") as file:
-                lines = file.readlines()
-            # Replace the last line
-            if lines:
-                lines[-1] = (
-                    f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
-                )
-
-            slurm_script_path = filepath + "gmsh_job.sh"
-
-            with open(slurm_script_path, "w") as file:
-                file.writelines(lines)
-
-            # Submit SLURM job
-            subprocess.run(["sbatch", slurm_script_path])
-            # Remove SLURM job script
-            os.remove(slurm_script_path)
-
-        else:
-            os.system(
-                f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
-            )
-            # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
+        # if hpc_mode:
+        #
+        #    basic_slurm_file = "./slurm_template.sh"
+        #
+        #    # Read the input file
+        #    with open(basic_slurm_file, "r") as file:
+        #        lines = file.readlines()
+        #    # Replace the last line
+        #    if lines:
+        #        lines[-1] = (
+        #            f"source venv/bin/activate\n gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}\n"
+        #        )
+        #
+        #    slurm_script_path = filepath + "gmsh_job.sh"
+        #
+        #    with open(slurm_script_path, "w") as file:
+        #        file.writelines(lines)
+        #
+        #    # Submit SLURM job
+        #    subprocess.run(["sbatch", slurm_script_path])
+        #    # Remove SLURM job script
+        #    os.remove(slurm_script_path)
+        #
+        # else:
+        os.system(
+            f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
+        )
+        # os.system(f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}")
         os.remove(filename_geo_backup)
     return unique_name + ".su2"
 
@@ -340,7 +342,9 @@ def update_lattice_mesh_file(n_cell, filepath):
 
 
 def update_half_lattice_mesh_file(n_cell, filepath):
-    filename_geo = filepath + "half_lattice_homogeneous.geo"
+    filename_geo = (
+        filepath + "half_lattice_homogeneous.geo"
+    )  # "half_lattice_rectangular.geo"
     filename_geo_backup = filepath + "half_lattice_backup.geo"
     filename_su2 = filepath + f"half_lattice_p{n_cell}.su2"
     filename_vtk = filepath + f"half_lattice_p{n_cell}.vtk"
@@ -365,9 +369,9 @@ def update_half_lattice_mesh_file(n_cell, filepath):
         os.system(
             f"gmsh {filename_geo_backup} -2 -format su2 -save_all -o {filename_su2}"
         )
-        os.system(
-            f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}"
-        )
+        # os.system(
+        #    f"gmsh {filename_geo_backup} -2 -format vtk -save_all -o {filename_vtk}"
+        # )
         os.remove(filename_geo_backup)
 
     return f"half_lattice_p{n_cell}.su2"
