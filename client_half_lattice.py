@@ -70,7 +70,15 @@ def main():
 
     # Define parameter ranges
     # characteristic length of the cells
-    parameter_range_n_cell = [0.02, 0.01, 0.005, 0.0025, 0.001, 0.0005]
+    parameter_range_n_cell = [0.05,
+                              0.025,
+                              0.01,
+                              0.0075,
+                              0.005,
+                              0.0025,
+                              0.001,
+                              0.0075,
+                              0.0005]
     #    0.0075,
     #    0.005,
     #    0.0025,

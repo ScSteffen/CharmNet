@@ -85,7 +85,7 @@ def main():
         0.0001,
     ]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
-    parameter_range_quad_order = [10, 20, 30, 40, 50]
+    parameter_range_quad_order = [10, 20, 30, 40]
     parameter_range_red_right_top = [0.4]  # [0.4, 0.45, 0.35]
     parameter_range_horizontal_right = [0.6]  # [0.61, 0.6, 0.59]
 
@@ -173,7 +173,7 @@ def model(parameters):
     quad_order = int(parameters[0][3])
     hpc_operation = parameters[0][4]
     singularity_hpc = parameters[0][5]
-    rectangular_mesh = parameters[0][7]
+    rectangular_mesh = parameters[0][6]
 
     subfolder = "benchmarks/quarter_hohlraum/"
     base_config_file = subfolder + "quarter_hohlraum.cfg"
