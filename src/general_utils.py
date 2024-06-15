@@ -69,7 +69,7 @@ def load_hohlraum_samples_from_npz(npz_file):
 def load_quarter_hohlraum_samples_from_npz(npz_file):
     samples = np.load(npz_file)["samples"]
     samples[2, :] = 0.4 + (0.2 - samples[2, :])  # tr
-    samples[5, :] = +0.6 - (0.05 - samples[5, :])  # wr
+    samples[5, :] = +0.6 - (samples[5, :] - 0.05)  # wr
 
     cl = np.copy(samples[6, :].reshape(1, -1))
     n_quad = np.copy(samples[7, :].reshape(1, -1))
