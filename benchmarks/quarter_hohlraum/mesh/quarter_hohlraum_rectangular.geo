@@ -26,4 +26,4 @@ Transfinite Surface {1};
 Physical Curve("inflow", 60) = {2};
 //+
 Physical Curve("void", 61) =  {1, 3, 4};
-Recombine Surface "*";
+//Recombine Surface "*";
