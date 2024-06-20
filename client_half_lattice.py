@@ -70,15 +70,17 @@ def main():
 
     # Define parameter ranges
     # characteristic length of the cells
-    parameter_range_n_cell = [0.05,
-                              0.025,
-                              0.01,
-                              0.0075,
-                              0.005,
-                              0.0025,
-                              0.001,
-                              0.0075,
-                              0.0005]
+    parameter_range_n_cell = [
+        0.05,
+        0.025,
+        0.01,
+        0.0075,
+        0.005,
+        0.0025,
+        0.001,
+        0.0075,
+        0.0005,
+    ]
     #    0.0075,
     #    0.005,
     #    0.0025,
@@ -86,7 +88,7 @@ def main():
     # ]
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
 
-    parameter_range_quad_order = [10, 20, 30, 40]
+    parameter_range_quad_order = [4, 8, 12, 16, 20, 24, 28]
     #    20,
     #    30,
     #    40,
@@ -182,8 +184,8 @@ def model(parameters):
     of quantities of interest calculated during the simulation.
     """
 
-    scatter_white_value = parameters[0][0]
-    absorption_blue_value = parameters[0][1]
+    absorption_blue_value = parameters[0][0]
+    scatter_white_value = parameters[0][1]
 
     n_cells = parameters[0][2]
     quad_order = int(parameters[0][3])

@@ -124,7 +124,9 @@ def main():
             wait_for_slurm_jobs(user=user, sleep_interval=10)
         else:
             print("Username could not be read from slurm config file.")
-        qois = call_models(design_params, hpc_operation_count=2)
+        qois = call_models(
+            design_params, hpc_operation_count=2, rectangular_mesh=rectangular_mesh
+        )
     else:
         qois = call_models(
             design_params, hpc_operation_count=0, rectangular_mesh=rectangular_mesh

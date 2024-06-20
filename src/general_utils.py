@@ -42,8 +42,8 @@ def load_hohlraum_samples_from_npz(npz_file):
     samples[1, :] = -0.4 - (0.2 - samples[1, :])  # bl
     samples[2, :] = 0.4 + (0.2 - samples[2, :])  # tr
     samples[3, :] = -0.4 - (0.2 - samples[3, :])  # br
-    samples[4, :] = -0.6 + (0.05 - samples[4, :])  # wl
-    samples[5, :] = +0.6 - (0.05 - samples[5, :])  # wr
+    samples[4, :] = -0.6 + (samples[4, :] - 0.05)  # wl
+    samples[5, :] = +0.6 - (samples[5, :] - 0.05)  # wr
 
     cl = np.copy(samples[6, :].reshape(1, -1))
     n_quad = np.copy(samples[7, :].reshape(1, -1))
@@ -69,7 +69,7 @@ def load_hohlraum_samples_from_npz(npz_file):
 def load_quarter_hohlraum_samples_from_npz(npz_file):
     samples = np.load(npz_file)["samples"]
     samples[2, :] = 0.4 + (0.2 - samples[2, :])  # tr
-    samples[5, :] = +0.6 - (0.05 - samples[5, :])  # wr
+    samples[5, :] = +0.6 - (samples[5, :] - 0.05)  # wr
 
     cl = np.copy(samples[6, :].reshape(1, -1))
     n_quad = np.copy(samples[7, :].reshape(1, -1))
@@ -185,8 +185,8 @@ def create_lattice_samples_from_param_range(
 
     for abs_blue in parameter_range_abs_blue:
         for scatter_white in parameter_range_scatter_white:
-            for n_cell in parameter_range_n_cell:
-                for n_quad in parameter_range_quad_order:
+            for n_quad in parameter_range_quad_order:
+                for n_cell in parameter_range_n_cell:
                     design_params.append(
                         [
                             abs_blue,
