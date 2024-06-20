@@ -116,7 +116,7 @@ def main():
         call_models(
             design_params, hpc_operation_count=1, singularity_hpc=singularity_hpc
         )
-        wait_for_slurm_jobs(user=user, sleep_interval=10)
+        #wait_for_slurm_jobs(user=user, sleep_interval=10)
 
         if user:
             print("Executing slurm scripts with user " + user)

@@ -73,19 +73,19 @@ def main():
 
     # Define parameter ranges
     parameter_range_n_cell = [
-        # 0.025,
-        0.01,
-        0.0075,
-        0.005,
-        0.0025,
-        0.001,
-        0.00075,
-        0.0005,
-        0.00025,
-        0.0001,
+        #0.025,
+        #0.01,
+        #0.0075,
+        #0.005,
+        #0.0025,
+        #0.001,
+        #0.00075,
+        #0.0005,
+        #0.00025,
+        0.000125,
     ]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
-    parameter_range_quad_order = [10, 20, 30, 40]
+    parameter_range_quad_order = [2, 4, 8, 12, 16, 20, 24, 28,32,36]
     parameter_range_red_right_top = [0.4]  # [0.4, 0.45, 0.35]
     parameter_range_horizontal_right = [0.6]  # [0.61, 0.6, 0.59]
 
@@ -116,7 +116,7 @@ def main():
             singularity_hpc=singularity_hpc,
             rectangular_mesh=rectangular_mesh,
         )
-        wait_for_slurm_jobs(user=user, sleep_interval=10)
+        #wait_for_slurm_jobs(user=user, sleep_interval=10)
 
         if user:
             print("Executing slurm scripts with user " + user)
