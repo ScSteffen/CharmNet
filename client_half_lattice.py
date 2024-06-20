@@ -184,8 +184,8 @@ def model(parameters):
     of quantities of interest calculated during the simulation.
     """
 
-    scatter_white_value = parameters[0][0]
-    absorption_blue_value = parameters[0][1]
+    absorption_blue_value = parameters[0][0]
+    scatter_white_value = parameters[0][1]
 
     n_cells = parameters[0][2]
     quad_order = int(parameters[0][3])
