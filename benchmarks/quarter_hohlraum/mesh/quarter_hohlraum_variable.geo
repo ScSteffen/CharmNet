@@ -6,14 +6,14 @@ horizontal_right_red = 0.6;
 // Outer points
 Point(1) = {0.65, 0.65, 0, cl_coarse};
 Point(2) = {0., 0.65, 0, cl_coarse};
-Point(3) = {0.65, 0., 0, cl_coarse};
+Point(3) = {0.65, 0., 0, cl_fine};
 Point(4) = {0., 0., 0, cl_coarse};
 
 // Geometry features
 // Black
-Point(6) = {0.65, 0.6, 0, cl_coarse};
+Point(6) = {0.65, 0.6, 0, cl_fine};
 
-Point(13) = {0.65,upper_right_red, 0, cl_coarse*1.5};
+Point(13) = {0.65,upper_right_red, 0, cl_fine};
 Point(14) = {horizontal_right_red, upper_right_red, 0, cl_fine};
 Point(15) = {horizontal_right_red, 0.0, 0, cl_fine};
 
@@ -31,8 +31,8 @@ Point(24) = {0.15, 0.0, 0, cl_fine};
 
 
 // Helper points and lines
-Point(27) = {horizontal_right_red, 0.6, 0, cl_coarse};
-Point(28) = {0.4, 0.0, 0, cl_coarse};
+Point(27) = {horizontal_right_red, 0.6, 0, cl_fine};
+Point(28) = {0.4, 0.0, 0, cl_fine};
 
 
 
