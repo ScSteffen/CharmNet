@@ -1,6 +1,28 @@
 import subprocess
 import numpy as np
 import os
+import argparse
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Process some flags for HPC and mesh operations."
+    )
+    # Add arguments
+    parser.add_argument(
+        "--no-hpc", action="store_true", help="Flag when using HPC cluster"
+    )
+    parser.add_argument(
+        "--load-from-npz", action="store_true", help="Flag to load from NPZ file"
+    )
+    parser.add_argument(
+        "--no-singularity-hpc",
+        action="store_true",
+        help="Flag to use Singularity on HPC",
+    )
+
+    args = parser.parse_args()
+    return args
 
 
 def replace_next_line(input_file, custom_line, output_file):
