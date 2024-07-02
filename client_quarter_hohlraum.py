@@ -84,7 +84,7 @@ def main():
         # 0.0001,
     ]  # characteristic length of the cells
     # GAUSS LEGENDRE  2D quadrature order (MUST BE EVEN)
-    parameter_range_quad_order = [10, 20, 30, 40]
+    parameter_range_quad_order = [2, 4, 8, 12, 16, 20, 24, 28, 32, 36]
     parameter_range_red_right_top = [0.4]  # [0.4, 0.45, 0.35]
     parameter_range_horizontal_right = [0.6]  # [0.61, 0.6, 0.59]
 
@@ -115,7 +115,7 @@ def main():
             singularity_hpc=singularity_hpc,
             rectangular_mesh=rectangular_mesh,
         )
-        wait_for_slurm_jobs(user=user, sleep_interval=10)
+        # wait_for_slurm_jobs(user=user, sleep_interval=10)
 
         if user:
             print("Executing slurm scripts with user " + user)
